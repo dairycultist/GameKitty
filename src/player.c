@@ -40,17 +40,34 @@ static inline int point_collides(SpriteMap *level, int x, int y) {
 	return IS_SOLID(level->sheet_map[x / 16 + y / 16 * level->map_width]);
 }
 
+// (x,y) refers to the bottom center of the collider
 static int aabb_collides(SpriteMap *level, int w, int h, int x, int y) {
 
 	w--;
 	h--;
 
-	return point_collides(level, x, y) 			// top, left/right
-		|| point_collides(level, x + w, y)
-		|| point_collides(level, x, y + h / 2)  // middle, left/right (otherwise, you can slide between 1-tall terrain)
-		|| point_collides(level, x + w, y + h / 2)
-		|| point_collides(level, x, y + h) 		// bottom, left/right
-		|| point_collides(level, x + w, y + h);
+	for (int dx = 0; dx <= w; dx += 16) {
+
+		for (int dy = 0; dy <= h; dy += 16) {
+
+			if (point_collides(level, x + dx, y + dy))
+				return TRUE;
+		}
+
+		// if h isn't divisible by 16, we won't reach the greater-edge on the y (the bottom) of the collider
+		if (point_collides(level, x + dx, y + h))
+			return TRUE;
+	}
+
+	// same with w
+	for (int dy = 0; dy <= h; dy += 16) {
+
+		if (point_collides(level, x + w, y + dy))
+			return TRUE;
+	}
+
+	// both at once
+	return point_collides(level, x + w, y + h);
 }
 
 void process_player(unsigned long time, Input *input, Player *player, SpriteMap *level) {
