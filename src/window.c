@@ -381,8 +381,8 @@ static void draw_level(unsigned long runtime) {
 	draw_sprite_from_sheet(
 		player_sprite,
 		player.sprite_index,
-		(int) player.x - camera_x,
-		(int) player.y - 4,
+		(int) player.x - camera_x - 24,
+		(int) player.y - 36,
 		player.flipped
 	);
 
@@ -422,7 +422,7 @@ int main() {
 
 	// initialize game
 	// TODO pass filepath corresponding to level data (map + sprite sheet path to use for each "tile type")
-	player_sprite = load_sprite_sheet("res/char.png", 16, 32);
+	player_sprite = load_sprite_sheet("res/char.png", 64, 64);
     font = load_sprite_sheet("res/font.png", 6, 6);
 	set_clear_color(100, 180, 255);
 
