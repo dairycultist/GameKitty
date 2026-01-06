@@ -200,7 +200,7 @@ void process_player(unsigned long time, Input *input, Player *player, SpriteMap 
 	if (player->crouched) {
 
 		// crouching
-		player->sprite_index = 7;
+		player->sprite_index = 1;
 
 	} else if (time_of_last_grounded != time) {
 
@@ -208,9 +208,9 @@ void process_player(unsigned long time, Input *input, Player *player, SpriteMap 
 		run_cycle_timer = 0.0;
 
 		if (speed_fac > 0.99) {
-			player->sprite_index = 8;
+			player->sprite_index = 3;
 		} else {
-			player->sprite_index = 4;
+			player->sprite_index = 2;
 		}
 
 	} else if ((ABS(player->dx) < 0.2 && !input->left && !input->right) || collided_horizontally) {
@@ -224,12 +224,12 @@ void process_player(unsigned long time, Input *input, Player *player, SpriteMap 
 		// running at top speed
 		if (speed_fac > 0.99) {
 
-			player->sprite_index = 5 + ((int) run_cycle_timer) % 2;
+			player->sprite_index = 8 + ((int) run_cycle_timer) % 4;
 
 		// running
 		} else {
 
-			player->sprite_index = run_cycle_timer < 3.0 ? 1 + (int) run_cycle_timer : 2;
+			player->sprite_index = 4 + ((int) run_cycle_timer) % 4;
 		}
 	}
 }
