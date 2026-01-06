@@ -84,4 +84,7 @@ typedef struct {
 
 void process_player(unsigned long time, Input *input, Player *player, SpriteMap *level);
 
+int point_collides(SpriteMap *level, int x, int y);
+int aabb_collides(SpriteMap *level, int w, int h, int x, int y);
+
 #endif

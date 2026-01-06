@@ -48,19 +48,17 @@ static int map[LEVEL_WIDTH * LEVEL_HEIGHT] = {
 	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 };
 
-
-
 /*
- * render helper implementations
+ * rendering
  */
-void set_clear_color(unsigned char r, unsigned char g, unsigned char b) {
+static void set_clear_color(unsigned char r, unsigned char g, unsigned char b) {
 	
 	clear_r = r;
 	clear_g = g;
 	clear_b = b;
 }
 
-Sprite *load_sprite(const char *path) {
+static Sprite *load_sprite(const char *path) {
 
 	Sprite *sprite = malloc(sizeof(Sprite));
 
@@ -71,20 +69,20 @@ Sprite *load_sprite(const char *path) {
 	return sprite;
 }
 
-void draw_sprite(Sprite *sprite, int x, int y, bool flip) {
+static void draw_sprite(Sprite *sprite, int x, int y, bool flip) {
 
 	SDL_Rect texture_rect = { x, y, sprite->w, sprite->h };
 
 	SDL_RenderCopyEx(renderer, sprite->sdl_texture, NULL, &texture_rect, 0.0, NULL, flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
-void free_sprite(Sprite *sprite) {
+static void free_sprite(Sprite *sprite) {
 	
 	SDL_DestroyTexture(sprite->sdl_texture);
 	free(sprite);
 }
 
-SpriteSheet *load_sprite_sheet(const char *path, int sprite_width, int sprite_height) {
+static SpriteSheet *load_sprite_sheet(const char *path, int sprite_width, int sprite_height) {
 
 	SpriteSheet *sprite_sheet = malloc(sizeof(SpriteSheet));
 
@@ -101,7 +99,7 @@ SpriteSheet *load_sprite_sheet(const char *path, int sprite_width, int sprite_he
 	return sprite_sheet;
 }
 
-void draw_sprite_from_sheet(SpriteSheet *sprite_sheet, int index, int x, int y, bool flip) {
+static void draw_sprite_from_sheet(SpriteSheet *sprite_sheet, int index, int x, int y, bool flip) {
 
 	SDL_Rect copy_rect = {
 
@@ -117,7 +115,7 @@ void draw_sprite_from_sheet(SpriteSheet *sprite_sheet, int index, int x, int y, 
 }
 
 // text sprite sheets follows a specific format
-void draw_text(SpriteSheet *sprite_sheet, char *text, int x, int y) {
+static void draw_text(SpriteSheet *sprite_sheet, char *text, int x, int y) {
 
 	int start_x = x;
 
@@ -158,7 +156,7 @@ void draw_text(SpriteSheet *sprite_sheet, char *text, int x, int y) {
 	}
 }
 
-void free_sprite_sheet(SpriteSheet *sprite_sheet) {
+static void free_sprite_sheet(SpriteSheet *sprite_sheet) {
 
 	SDL_DestroyTexture(sprite_sheet->sdl_texture);
 	free(sprite_sheet);
@@ -173,7 +171,7 @@ static int sheet_at_xy(int edge_sheet, SpriteMap *sprite_map, int x, int y) {
 	return sprite_map->sheet_map[x + y * sprite_map->map_width];
 }
 
-void flush_sprite_map_at(int x, int y, SpriteMap *sprite_map) {
+static void flush_sprite_map_at(int x, int y, SpriteMap *sprite_map) {
 
 	int sheet = sprite_map->sheet_map[x + y * sprite_map->map_width];
 
@@ -274,7 +272,7 @@ void flush_sprite_map_at(int x, int y, SpriteMap *sprite_map) {
 	}
 }
 
-void flush_sprite_map(SpriteMap *sprite_map) {
+static void flush_sprite_map(SpriteMap *sprite_map) {
 
 	// populate sprite_map->sprite_map with connected sprite data (following the assumed 8x8 tilemap format) based on sprite_map->sheet_map
 	for (int x = 0; x < sprite_map->map_width; x++) {
@@ -285,7 +283,7 @@ void flush_sprite_map(SpriteMap *sprite_map) {
 	}
 }
 
-SpriteMap *create_sprite_map(int sprite_width, int sprite_height, int map_width, int map_height) {
+static SpriteMap *create_sprite_map(int sprite_width, int sprite_height, int map_width, int map_height) {
 
 	SpriteMap *sprite_map = malloc(sizeof(SpriteMap));
 
@@ -305,7 +303,7 @@ SpriteMap *create_sprite_map(int sprite_width, int sprite_height, int map_width,
 	return sprite_map;
 }
 
-void add_sprite_sheet_to_sprite_map(SpriteMap *sprite_map, const char *sprite_sheet_path, SpriteSheetType sprite_sheet_type) {
+static void add_sprite_sheet_to_sprite_map(SpriteMap *sprite_map, const char *sprite_sheet_path, SpriteSheetType sprite_sheet_type) {
 
 	sprite_map->sprite_sheet_count++;
 
@@ -318,7 +316,7 @@ void add_sprite_sheet_to_sprite_map(SpriteMap *sprite_map, const char *sprite_sh
 	sprite_map->sprite_sheet_types[sprite_map->sprite_sheet_count - 1] = sprite_sheet_type;
 }
 
-void draw_sprite_map(SpriteMap *sprite_map, int x, int y) {
+static void draw_sprite_map(SpriteMap *sprite_map, int x, int y) {
 
 	// calculate bounds of indices array that will actually be on screen
 	// this is unreadable but it works ok
@@ -350,7 +348,7 @@ void draw_sprite_map(SpriteMap *sprite_map, int x, int y) {
 	}
 }
 
-void free_sprite_map(SpriteMap *sprite_map) {
+static void free_sprite_map(SpriteMap *sprite_map) {
 
 	// free maps
 	free(sprite_map->sheet_map);
@@ -368,9 +366,6 @@ void free_sprite_map(SpriteMap *sprite_map) {
 	// free the sprite map
 	free(sprite_map);
 }
-
-
-
 
 static void draw_level(unsigned long runtime) {
 
@@ -390,6 +385,55 @@ static void draw_level(unsigned long runtime) {
     draw_text(font, "ARROW KEYS TO MOVE\nCONFIRM: Z\nCANCEL:  X\nMENU:    C\n(WHAT'S THAT?! +-*/1234567890)", 4, 4);
 }
 
+/*
+ * collision
+ */
+int point_collides(SpriteMap *level, int x, int y) {
+
+	#define IS_SOLID(sheet) ((sheet) != 0)
+
+	if (x < 0 || x >= level->map_width * 16)
+		return 1;
+
+	if (y < 0 || y >= level->map_height * 16)
+		return 0;
+
+	return IS_SOLID(level->sheet_map[x / 16 + y / 16 * level->map_width]);
+}
+
+// (x,y) refers to the bottom center of the collider
+int aabb_collides(SpriteMap *level, int w, int h, int x, int y) {
+
+	w--;
+	h--;
+
+	for (int dx = 0; dx <= w; dx += 16) {
+
+		for (int dy = 0; dy <= h; dy += 16) {
+
+			if (point_collides(level, x + dx, y + dy))
+				return TRUE;
+		}
+
+		// if h isn't divisible by 16, we won't reach the greater-edge on the y (the bottom) of the collider
+		if (point_collides(level, x + dx, y + h))
+			return TRUE;
+	}
+
+	// same with w
+	for (int dy = 0; dy <= h; dy += 16) {
+
+		if (point_collides(level, x + w, y + dy))
+			return TRUE;
+	}
+
+	// both at once
+	return point_collides(level, x + w, y + h);
+}
+
+/*
+ * main logic
+ */
 int main() {
 
 	printf("Starting Berry2D\n");

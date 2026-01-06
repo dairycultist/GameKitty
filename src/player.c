@@ -27,49 +27,6 @@ static float speed_fac; // 0..1
 
 #define RUN_SPEED (!(input->left ^ input->right) ? 0 : speed_fac < 0.8 ? 0.65 * MAX_RUN_SPEED : MAX_RUN_SPEED)
 
-static inline int point_collides(SpriteMap *level, int x, int y) {
-
-	#define IS_SOLID(sheet) ((sheet) != 0)
-
-	if (x < 0 || x >= level->map_width * 16)
-		return 1;
-
-	if (y < 0 || y >= level->map_height * 16)
-		return 0;
-
-	return IS_SOLID(level->sheet_map[x / 16 + y / 16 * level->map_width]);
-}
-
-// (x,y) refers to the bottom center of the collider
-static int aabb_collides(SpriteMap *level, int w, int h, int x, int y) {
-
-	w--;
-	h--;
-
-	for (int dx = 0; dx <= w; dx += 16) {
-
-		for (int dy = 0; dy <= h; dy += 16) {
-
-			if (point_collides(level, x + dx, y + dy))
-				return TRUE;
-		}
-
-		// if h isn't divisible by 16, we won't reach the greater-edge on the y (the bottom) of the collider
-		if (point_collides(level, x + dx, y + h))
-			return TRUE;
-	}
-
-	// same with w
-	for (int dy = 0; dy <= h; dy += 16) {
-
-		if (point_collides(level, x + w, y + dy))
-			return TRUE;
-	}
-
-	// both at once
-	return point_collides(level, x + w, y + h);
-}
-
 void process_player(unsigned long time, Input *input, Player *player, SpriteMap *level) {
 
 	/*
