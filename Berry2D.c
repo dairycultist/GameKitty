@@ -10,8 +10,8 @@
 #define SPR_DIM 16
 
 // sprite sheet dimensions in sprites
-#define SPRS_WIDTH 8
-#define SPRS_HEIGHT 8
+#define SPRS_WIDTH 16
+#define SPRS_HEIGHT 16
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -20,8 +20,6 @@ static SDL_Renderer *renderer;
 static SDL_Texture *screen_buffer;
 
 static unsigned char clear_r, clear_g, clear_b;
-
-static unsigned long runtime = 0; // wraps to 0 at around 4.5 years
 
 static SDL_Texture *spritesheet;
 
@@ -110,7 +108,7 @@ int main(int argc, char **argv) {
 	}
 
 	// print controls
-	printf("D-PAD: Arrow keys\n");
+	printf("D-PAD   : Arrow keys\n");
 	printf("Action A: Z\n");
 	printf("Action B: X\n");
 	printf("Action X: A\n");
@@ -122,14 +120,16 @@ int main(int argc, char **argv) {
 
 	char running = 1;
 
-	int up, 		up_justchanged;
-	int down, 		down_justchanged;
-	int left, 		left_justchanged;
-	int right, 		right_justchanged;
-	int action_a, 	action_a_justchanged;
-	int action_b, 	action_b_justchanged;
-	int action_x, 	action_x_justchanged;
-	int action_y, 	action_y_justchanged;
+	int up = 0, 		up_justchanged;
+	int down = 0, 		down_justchanged;
+	int left = 0, 		left_justchanged;
+	int right = 0, 		right_justchanged;
+	int action_a = 0, 	action_a_justchanged;
+	int action_b = 0, 	action_b_justchanged;
+	int action_x = 0, 	action_x_justchanged;
+	int action_y = 0, 	action_y_justchanged;
+
+	int x = 0, y = 0; // TEMP
 
 	while (running) {
 
@@ -207,14 +207,11 @@ int main(int argc, char **argv) {
 		SDL_RenderClear(renderer);
 
 		// process/draw
-		draw_sprite(
-			0,
-			(int) (cos(runtime * 0.05) * 20) + 20,
-			(int) (sin(runtime * 0.05) * 20) + 20,
-			0
-		);
-
-		runtime++;
+		if (up) { y--; }
+		if (down) { y++; }
+		if (left) { x--; }
+		if (right) { x++; }
+		draw_sprite(0, x, y, 0);
 
 		SDL_SetRenderTarget(renderer, NULL); 								// reset render target back to window
 		SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 			// render screen_buffer
