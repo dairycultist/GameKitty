@@ -4,6 +4,8 @@ A fantasy console that has the intention of poorly replicating a retro 2D handhe
 
 tiny, self-contained program you can understand at a glance for making fun games
 
+standalone — one program that takes in your game and runs it (no external compiler)
+
 ## Installation
 
 1. GameKitty relies on SDL2 and SDL2 Image. These can be installed __on Mac/Linux__ with the following commands:

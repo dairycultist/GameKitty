@@ -39,7 +39,7 @@ static void draw_sprite(SDL_Renderer *renderer, SDL_Texture *spritesheet, int in
 int main(int argc, char **argv) {
 
 	if (argc != 3) {
-		printf("Format: %s path/to/code.txt path/to/spritesheet.png\n", argv[0]);
+		printf("Format: %s path/to/instructions.txt path/to/spritesheet.png\n", argv[0]);
 		return 1;
 	}
 
@@ -89,6 +89,8 @@ int main(int argc, char **argv) {
 	}
 
 	// TODO parse code into two series of instructions -- start and frame
+	if (asm_to_bin(argv[1], NULL))
+		return 1;
 
 	// print controls
 	printf("\n[GameKitty] Good to go!\n\n");
