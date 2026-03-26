@@ -107,12 +107,14 @@ int main(int argc, char **argv) {
 		}
 	}
 
+	// TODO parse code into a series of instructions (to evaluate every frame)
+
 	// print controls
-	printf("D-PAD   : Arrow keys\n");
-	printf("Action A: Z\n");
-	printf("Action B: X\n");
-	printf("Action X: A\n");
-	printf("Action Y: S\n");
+	printf("D-PAD    : Arrow keys\n");
+	printf("Action A : Z\n");
+	printf("Action B : X\n");
+	printf("Action X : A\n");
+	printf("Action Y : S\n");
 
 	// process events until window is closed
 	SDL_Event event;
@@ -129,7 +131,7 @@ int main(int argc, char **argv) {
 	int action_x = 0, 	action_x_justchanged;
 	int action_y = 0, 	action_y_justchanged;
 
-	int x = 0, y = 0; // TEMP
+	unsigned char memory[256] = {};
 
 	while (running) {
 
@@ -207,11 +209,11 @@ int main(int argc, char **argv) {
 		SDL_RenderClear(renderer);
 
 		// process/draw
-		if (up) { y--; }
-		if (down) { y++; }
-		if (left) { x--; }
-		if (right) { x++; }
-		draw_sprite(0, x, y, 0);
+		if (up) { memory[1]--; }
+		if (down) { memory[1]++; }
+		if (left) { memory[0]--; }
+		if (right) { memory[0]++; }
+		draw_sprite(0, memory[0], memory[1], 0);
 
 		SDL_SetRenderTarget(renderer, NULL); 								// reset render target back to window
 		SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 			// render screen_buffer
