@@ -213,11 +213,12 @@ int main(int argc, char **argv) {
 					draw_sprite(
 						renderer,
 						spritesheet,
-						frame_instr[++i],
-						frame_instr[++i] | ((signed short) frame_instr[++i] << 8),
-						frame_instr[++i] | ((signed short) frame_instr[++i] << 8),
+						frame_instr[i + 1],
+						frame_instr[i + 2] | ((signed short) frame_instr[i + 3] << 8),
+						frame_instr[i + 4] | ((signed short) frame_instr[i + 5] << 8),
 						0
 					);
+					i += 5;
 					break;
 				
 				default:
