@@ -41,38 +41,36 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
-	printf("Starting Berry2D\n");
-
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-		printf("Error initializing SDL:\n%s\n", SDL_GetError());
+		fprintf(stderr, "\x1b[31m[Berry2D] Error initializing SDL:\n%s\n\x1b[0m", SDL_GetError());
 		return 1;
 	}
 
 	SDL_Window *window = SDL_CreateWindow("Berry2D", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH * 2, HEIGHT * 2, SDL_WINDOW_RESIZABLE);
 
 	if (!window) {
-		printf("Error creating window:\n%s\n", SDL_GetError());
+		fprintf(stderr, "\x1b[31m[Berry2D] Error creating window:\n%s\n\x1b[0m", SDL_GetError());
 		return 1;
     }
 
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
 
 	if (!renderer) {
-		printf("Error creating renderer:\n%s\n", SDL_GetError());
+		fprintf(stderr, "\x1b[31m[Berry2D] Error creating renderer:\n%s\n\x1b[0m", SDL_GetError());
 		return 1;
 	}
 
 	SDL_Texture *screen_buffer = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, WIDTH, HEIGHT);
 
 	if (!screen_buffer) {
-		printf("Error creating screen buffer:\n%s\n", SDL_GetError());
+		fprintf(stderr, "\x1b[31m[Berry2D] Error creating screen buffer:\n%s\n\x1b[0m", SDL_GetError());
 		return 1;
 	}
 
 	SDL_Texture *spritesheet = IMG_LoadTexture(renderer, argv[2]);
 
 	if (!spritesheet) {
-		printf("Could not read spritesheet\n");
+		fprintf(stderr, "\x1b[31m[Berry2D] Could not read spritesheet\n\x1b[0m");
 		return 1;
 	}
 
@@ -83,7 +81,7 @@ int main(int argc, char **argv) {
 		SDL_QueryTexture(spritesheet, NULL, NULL, &width, &height);
 
 		if (width != SPRS_WIDTH * SPR_DIM || height != SPRS_HEIGHT * SPR_DIM) {
-			printf("Sprite sheet has incorrect dimensions; expected %dx%d, got %dx%d\n", SPRS_WIDTH * SPR_DIM, SPRS_HEIGHT * SPR_DIM, width, height);
+			fprintf(stderr, "\x1b[31m[Berry2D] Sprite sheet has incorrect dimensions; expected %dx%d, got %dx%d\n\x1b[0m", SPRS_WIDTH * SPR_DIM, SPRS_HEIGHT * SPR_DIM, width, height);
 			return 1;
 		}
 	}
@@ -91,6 +89,7 @@ int main(int argc, char **argv) {
 	// TODO parse code into two series of instructions -- start and frame
 
 	// print controls
+	printf("\n[Berry2D] Good to go!\n\n");
 	printf("D-PAD    : Arrow keys\n");
 	printf("Action A : Z\n");
 	printf("Action B : X\n");
