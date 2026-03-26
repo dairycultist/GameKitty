@@ -2,26 +2,16 @@
 #include <SDL2/SDL_image.h>
 
 // screen size
-#define WIDTH 128
-#define HEIGHT 128
+#define WIDTH 256
+#define HEIGHT 192
 #define ASPECT_RATIO (WIDTH / (float) HEIGHT)
 
 // width and height of sprites
-#define SPR_DIM 8
+#define SPR_DIM 16
 
 // sprite sheet dimensions in sprites
-#define SPRS_WIDTH 16
-#define SPRS_HEIGHT 16
-
-typedef struct {
-
-    int up, down, left, right;
-    int up_justchanged, down_justchanged, left_justchanged, right_justchanged;
-
-	int confirm, cancel, menu;
-	int confirm_justchanged, cancel_justchanged, menu_justchanged;
-
-} Input;
+#define SPRS_WIDTH 8
+#define SPRS_HEIGHT 8
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -119,23 +109,38 @@ int main(int argc, char **argv) {
 		}
 	}
 
+	// print controls
+	printf("D-PAD: Arrow keys\n");
+	printf("Action A: Z\n");
+	printf("Action B: X\n");
+	printf("Action X: A\n");
+	printf("Action Y: S\n");
+
 	// process events until window is closed
 	SDL_Event event;
 	SDL_Rect letterbox = { 0, 0, WIDTH * 2, HEIGHT * 2 };
 
 	char running = 1;
 
-	Input input = {};
+	int up, 		up_justchanged;
+	int down, 		down_justchanged;
+	int left, 		left_justchanged;
+	int right, 		right_justchanged;
+	int action_a, 	action_a_justchanged;
+	int action_b, 	action_b_justchanged;
+	int action_x, 	action_x_justchanged;
+	int action_y, 	action_y_justchanged;
 
 	while (running) {
 
-		input.up_justchanged      = 0;
-		input.down_justchanged    = 0;
-		input.left_justchanged    = 0;
-		input.right_justchanged   = 0;
-		input.confirm_justchanged = 0;
-		input.cancel_justchanged  = 0;
-		input.menu_justchanged    = 0;
+		up_justchanged       = 0;
+		down_justchanged     = 0;
+		left_justchanged     = 0;
+		right_justchanged    = 0;
+		action_a_justchanged = 0;
+		action_b_justchanged = 0;
+		action_x_justchanged = 0;
+		action_y_justchanged = 0;
 
 		while (SDL_PollEvent(&event)) {
 
@@ -158,32 +163,36 @@ int main(int argc, char **argv) {
 
 				switch (event.key.keysym.scancode) {
 					case SDL_SCANCODE_UP:
-						input.up = event.key.state == SDL_PRESSED;
-						input.up_justchanged = 1;
+						up = event.key.state == SDL_PRESSED;
+						up_justchanged = 1;
 						break;
 					case SDL_SCANCODE_DOWN:
-						input.down = event.key.state == SDL_PRESSED;
-						input.down_justchanged = 1;
+						down = event.key.state == SDL_PRESSED;
+						down_justchanged = 1;
 						break;
 					case SDL_SCANCODE_LEFT:
-						input.left = event.key.state == SDL_PRESSED;
-						input.left_justchanged = 1;
+						left = event.key.state == SDL_PRESSED;
+						left_justchanged = 1;
 						break;
 					case SDL_SCANCODE_RIGHT:
-						input.right = event.key.state == SDL_PRESSED;
-						input.right_justchanged = 1;
+						right = event.key.state == SDL_PRESSED;
+						right_justchanged = 1;
 						break;
 					case SDL_SCANCODE_Z:
-						input.confirm = event.key.state == SDL_PRESSED;
-						input.confirm_justchanged = 1;
+						action_a = event.key.state == SDL_PRESSED;
+						action_a_justchanged = 1;
 						break;
 					case SDL_SCANCODE_X:
-						input.cancel = event.key.state == SDL_PRESSED;
-						input.cancel_justchanged = 1;
+						action_b = event.key.state == SDL_PRESSED;
+						action_b_justchanged = 1;
 						break;
-					case SDL_SCANCODE_C:
-						input.menu = event.key.state == SDL_PRESSED;
-						input.menu_justchanged = 1;
+					case SDL_SCANCODE_A:
+						action_x = event.key.state == SDL_PRESSED;
+						action_x_justchanged = 1;
+						break;
+					case SDL_SCANCODE_S:
+						action_y = event.key.state == SDL_PRESSED;
+						action_y_justchanged = 1;
 						break;
 					default:
 						break;
