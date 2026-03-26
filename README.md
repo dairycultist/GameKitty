@@ -1,4 +1,4 @@
-# Berry2D (working title?)
+# GameKitty
 
 chud fantasy console stealing from pico-8 idk
 
@@ -6,7 +6,7 @@ tiny, self-contained program you can understand at a glance for making fun games
 
 ## Installation
 
-1. Berry2D relies on SDL2 and SDL2 Image. These can be installed __on Mac/Linux__ with the following commands:
+1. GameKitty relies on SDL2 and SDL2 Image. These can be installed __on Mac/Linux__ with the following commands:
 
 ```
 brew install sdl2
@@ -16,12 +16,12 @@ brew install sdl2_image
 2. Then, clone the repository.
 
 ```
-git clone https://github.com/dairycultist/Berry2D
-cd Berry2D
+git clone https://github.com/dairycultist/GameKitty
+cd GameKitty
 ```
 
-3. Finally, build and run the Berry2D executable `Berry2D/build`.
+3. Finally, build GameKitty and launch it with the demo game.
 
 ```
-make run
+make demo
 ```

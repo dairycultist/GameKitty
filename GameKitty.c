@@ -42,35 +42,35 @@ int main(int argc, char **argv) {
 	}
 
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-		fprintf(stderr, "\x1b[31m[Berry2D] Error initializing SDL:\n%s\n\x1b[0m", SDL_GetError());
+		fprintf(stderr, "\x1b[31m[GameKitty] Error initializing SDL:\n%s\n\x1b[0m", SDL_GetError());
 		return 1;
 	}
 
-	SDL_Window *window = SDL_CreateWindow("Berry2D", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH * 2, HEIGHT * 2, SDL_WINDOW_RESIZABLE);
+	SDL_Window *window = SDL_CreateWindow("GameKitty", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH * 2, HEIGHT * 2, SDL_WINDOW_RESIZABLE);
 
 	if (!window) {
-		fprintf(stderr, "\x1b[31m[Berry2D] Error creating window:\n%s\n\x1b[0m", SDL_GetError());
+		fprintf(stderr, "\x1b[31m[GameKitty] Error creating window:\n%s\n\x1b[0m", SDL_GetError());
 		return 1;
     }
 
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
 
 	if (!renderer) {
-		fprintf(stderr, "\x1b[31m[Berry2D] Error creating renderer:\n%s\n\x1b[0m", SDL_GetError());
+		fprintf(stderr, "\x1b[31m[GameKitty] Error creating renderer:\n%s\n\x1b[0m", SDL_GetError());
 		return 1;
 	}
 
 	SDL_Texture *screen_buffer = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, WIDTH, HEIGHT);
 
 	if (!screen_buffer) {
-		fprintf(stderr, "\x1b[31m[Berry2D] Error creating screen buffer:\n%s\n\x1b[0m", SDL_GetError());
+		fprintf(stderr, "\x1b[31m[GameKitty] Error creating screen buffer:\n%s\n\x1b[0m", SDL_GetError());
 		return 1;
 	}
 
 	SDL_Texture *spritesheet = IMG_LoadTexture(renderer, argv[2]);
 
 	if (!spritesheet) {
-		fprintf(stderr, "\x1b[31m[Berry2D] Could not read spritesheet\n\x1b[0m");
+		fprintf(stderr, "\x1b[31m[GameKitty] Could not read spritesheet\n\x1b[0m");
 		return 1;
 	}
 
@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
 		SDL_QueryTexture(spritesheet, NULL, NULL, &width, &height);
 
 		if (width != SPRS_WIDTH * SPR_DIM || height != SPRS_HEIGHT * SPR_DIM) {
-			fprintf(stderr, "\x1b[31m[Berry2D] Sprite sheet has incorrect dimensions; expected %dx%d, got %dx%d\n\x1b[0m", SPRS_WIDTH * SPR_DIM, SPRS_HEIGHT * SPR_DIM, width, height);
+			fprintf(stderr, "\x1b[31m[GameKitty] Sprite sheet has incorrect dimensions; expected %dx%d, got %dx%d\n\x1b[0m", SPRS_WIDTH * SPR_DIM, SPRS_HEIGHT * SPR_DIM, width, height);
 			return 1;
 		}
 	}
@@ -89,7 +89,7 @@ int main(int argc, char **argv) {
 	// TODO parse code into two series of instructions -- start and frame
 
 	// print controls
-	printf("\n[Berry2D] Good to go!\n\n");
+	printf("\n[GameKitty] Good to go!\n\n");
 	printf("D-PAD    : Arrow keys\n");
 	printf("Action A : Z\n");
 	printf("Action B : X\n");
@@ -194,11 +194,11 @@ int main(int argc, char **argv) {
 		SDL_RenderClear(renderer);
 
 		// TODO execute frame instructions
-		if (up) { memory[1]--; }
-		if (down) { memory[1]++; }
+		if (up) { memory[2]--; }
+		if (down) { memory[2]++; }
 		if (left) { memory[0]--; }
 		if (right) { memory[0]++; }
-		draw_sprite(renderer, spritesheet, 0, memory[0] - SPR_DIM, memory[1] - SPR_DIM, 0);
+		draw_sprite(renderer, spritesheet, 0, memory[0], memory[2], 0);
 
 		SDL_SetRenderTarget(renderer, NULL); 								// reset render target back to window
 		SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 			// render screen_buffer
