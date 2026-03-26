@@ -27,3 +27,7 @@ cd GameKitty
 ```
 make demo
 ```
+
+## Using GameKitty
+
+The GameKitty fantasy console implements a custom Instruction Set Architecture.
