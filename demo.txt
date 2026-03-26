@@ -3,4 +3,4 @@ JMPFALSE no_down
 ADD $0 1
 :no_down
 
-spr 0 0 $0
+spr8 0 0 $0

@@ -2,8 +2,8 @@
 #include <SDL2/SDL_image.h>
 
 // screen size
-#define WIDTH 256
-#define HEIGHT 192
+#define WIDTH 240
+#define HEIGHT 160
 #define ASPECT_RATIO (WIDTH / (float) HEIGHT)
 
 // width and height of sprites
@@ -198,7 +198,7 @@ int main(int argc, char **argv) {
 		if (down) { memory[1]++; }
 		if (left) { memory[0]--; }
 		if (right) { memory[0]++; }
-		draw_sprite(renderer, spritesheet, 0, memory[0], memory[1], 0);
+		draw_sprite(renderer, spritesheet, 0, memory[0] - SPR_DIM, memory[1] - SPR_DIM, 0);
 
 		SDL_SetRenderTarget(renderer, NULL); 								// reset render target back to window
 		SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 			// render screen_buffer
