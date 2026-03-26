@@ -88,8 +88,11 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	// TODO parse code into two series of instructions -- start and frame
-	if (asm_to_bin(argv[1], NULL))
+	// parse code into two series of instructions, start and frame
+	unsigned char start_instr[65536] = {};
+	unsigned char frame_instr[65536] = {};
+
+	if (asm_to_bin(argv[1], start_instr, frame_instr))
 		return 1;
 
 	// print controls
@@ -197,12 +200,27 @@ int main(int argc, char **argv) {
 		SDL_SetRenderDrawColor(renderer, clear_r, clear_g, clear_b, 255); 	// clear screen_buffer to clear color (default black)
 		SDL_RenderClear(renderer);
 
-		// TODO execute frame instructions
-		if (up) { memory[2]--; }
-		if (down) { memory[2]++; }
-		if (left) { memory[0]--; }
-		if (right) { memory[0]++; }
-		draw_sprite(renderer, spritesheet, 0, memory[0], memory[2], 0);
+		// execute frame instructions
+		for (int i = 0; i < 65536; i++) {
+
+			switch (frame_instr[i]) {
+
+				case 0x01:
+					draw_sprite(
+						renderer,
+						spritesheet,
+						frame_instr[++i],
+						frame_instr[++i] | ((signed short) frame_instr[++i] << 8),
+						frame_instr[++i] | ((signed short) frame_instr[++i] << 8),
+						0
+					);
+					break;
+				
+				default:
+					i = 65536;
+					break;
+			}
+		}
 
 		SDL_SetRenderTarget(renderer, NULL); 								// reset render target back to window
 		SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 			// render screen_buffer
