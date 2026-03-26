@@ -1,6 +1,6 @@
 # GameKitty
 
-chud fantasy console stealing from pico-8 idk
+A fantasy console that has the intention of poorly replicating a retro 2D handheld experience (C + SDL).
 
 tiny, self-contained program you can understand at a glance for making fun games
 
