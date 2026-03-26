@@ -1,1 +1,9 @@
-SPR 0 20 20
+SPR 0 20 50
+
+/*
+KEYDOWN down
+JMPFALSE no_down
+ADDC $0 1 /* adds to register $0, carrying into $1 (little-endian) */
+:no_down
+SPR 0 0 $0 /* inputs an unsigned byte for sprite index and two signed shorts (as words) for position; automatically culls if outside of screen */
+*/
