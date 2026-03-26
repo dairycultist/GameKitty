@@ -1,6 +1,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "asm_to_bin.h"
+
 // screen size
 #define WIDTH 240
 #define HEIGHT 160
