@@ -205,7 +205,11 @@ int main(int argc, char **argv) {
 
 			switch (frame_instr[i]) {
 
-				case 0x01:
+				case I_FINISH:
+					i = 65536;
+					break;
+
+				case I_SPR_III:
 					draw_sprite(
 						renderer,
 						spritesheet,
@@ -217,8 +221,8 @@ int main(int argc, char **argv) {
 					break;
 				
 				default:
-					i = 65536;
-					break;
+					fprintf(stderr, "\x1b[31m[GameKitty] Encountered unexpected instruction: 0x%02x\n\x1b[0m", frame_instr[i]);
+					return 1;
 			}
 		}
 

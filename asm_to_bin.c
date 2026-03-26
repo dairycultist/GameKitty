@@ -3,10 +3,6 @@
 
 #include "asm_to_bin.h"
 
-#define FINISH 0x00
-#define SPR_III 0x01
-#define SPR IAA 0x02
-
 int asm_to_bin(const char *asm_path, unsigned char start_instr[65536], unsigned char frame_instr[65536]) {
 
 	// print every token in the asm, counting the linebreaks
@@ -50,7 +46,7 @@ int asm_to_bin(const char *asm_path, unsigned char start_instr[65536], unsigned 
 			// SPR 0  0  0 => SPR_III index(ui8) x(i16) y(i16)
 			// SPR 0 $0 $0 => SPR_IAA index(ui8) x(a16) y(a16) // TODO
 
-			frame_instr[instr_i++] = SPR_III;
+			frame_instr[instr_i++] = I_SPR_III;
 
 			unsigned char index;
 			short x, y;
