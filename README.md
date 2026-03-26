@@ -1,19 +1,8 @@
 # Berry2D (working title?)
 
-I wanna cut back the scope to just a single, dedicated game (which admittedly would probably be very easily modifiable)
+chud fantasy console stealing from pico-8 idk
 
-- "a couch co-op platformer game with decent movement and cute art would be so fun" (my own words bro; [look at this](https://fixvx.com/Hyohnoo/status/1993024148486926431?s=20))
-- load levels from files that are just a big grid of numbers
-
----
-
-A platformer engine akin to [Super Mario Bros. Remastered](https://github.com/JHDev2006/Super-Mario-Bros.-Remastered-Public).
-
-- base game with player characters and levels
-- modded player characters (allowing for stuff like [this](https://bsky.app/profile/honeyswells.bsky.social/post/3lz74rivjmk24))
-- level editor which exports level file
-
-next big milestone is probably a level editor, tho I still gotta work on a level file format, arbitrary entity system (particles + enemies + charge trail + items), parallax system (maybe part of entity system? render order...), ending a level, and a menu system as well.
+tiny, self-contained program you can understand at a glance for making fun games
 
 ## Installation
 

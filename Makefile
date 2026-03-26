@@ -1,10 +1,10 @@
-.PHONY: run clean
+.PHONY: demo clean
 
-build: src/* res/*
-	gcc -o build src/*.c -lSDL2_image $(shell sdl2-config --cflags) $(shell sdl2-config --libs)
+Berry2D: Berry2D.c
+	gcc -o Berry2D Berry2D.c -lSDL2_image $(shell sdl2-config --cflags) $(shell sdl2-config --libs)
 
-run: build
-	./build
+demo: Berry2D
+	./Berry2D demo.txt demo.png
 
 clean:
-	rm build
+	rm Berry2D
