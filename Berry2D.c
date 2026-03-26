@@ -13,27 +13,10 @@
 #define SPRS_WIDTH 16
 #define SPRS_HEIGHT 16
 
-////////////////////////////////////////////////////////////////////////
-
-static SDL_Window *window;
-static SDL_Renderer *renderer;
-static SDL_Texture *screen_buffer;
-
-static unsigned char clear_r, clear_g, clear_b;
-
-static SDL_Texture *spritesheet;
-
 /*
  * rendering
  */
-static void set_clear_color(unsigned char r, unsigned char g, unsigned char b) {
-	
-	clear_r = r;
-	clear_g = g;
-	clear_b = b;
-}
-
-static void draw_sprite(int index, int x, int y, int flip) {
+static void draw_sprite(SDL_Renderer *renderer, SDL_Texture *spritesheet, int index, int x, int y, int flip) {
 
 	SDL_Rect copy_rect = {
 
@@ -65,35 +48,33 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
-	window = SDL_CreateWindow("Berry2D", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH * 2, HEIGHT * 2, SDL_WINDOW_RESIZABLE);
+	SDL_Window *window = SDL_CreateWindow("Berry2D", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH * 2, HEIGHT * 2, SDL_WINDOW_RESIZABLE);
 
 	if (!window) {
 		printf("Error creating window:\n%s\n", SDL_GetError());
 		return 1;
     }
 
-	renderer = SDL_CreateRenderer(window, -1, 0);
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
 
 	if (!renderer) {
 		printf("Error creating renderer:\n%s\n", SDL_GetError());
 		return 1;
 	}
 
-	screen_buffer = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, WIDTH, HEIGHT);
+	SDL_Texture *screen_buffer = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, WIDTH, HEIGHT);
 
 	if (!screen_buffer) {
 		printf("Error creating screen buffer:\n%s\n", SDL_GetError());
 		return 1;
 	}
 
-	spritesheet = IMG_LoadTexture(renderer, argv[2]);
+	SDL_Texture *spritesheet = IMG_LoadTexture(renderer, argv[2]);
 
 	if (!spritesheet) {
 		printf("Could not read spritesheet\n");
 		return 1;
 	}
-
-	set_clear_color(0, 0, 0);
 
 	// verify spritesheet is legal
 	{
@@ -107,7 +88,7 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	// TODO parse code into a series of instructions (to evaluate every frame)
+	// TODO parse code into two series of instructions -- start and frame
 
 	// print controls
 	printf("D-PAD    : Arrow keys\n");
@@ -116,11 +97,13 @@ int main(int argc, char **argv) {
 	printf("Action X : A\n");
 	printf("Action Y : S\n");
 
-	// process events until window is closed
+	// prepare
 	SDL_Event event;
 	SDL_Rect letterbox = { 0, 0, WIDTH * 2, HEIGHT * 2 };
 
 	char running = 1;
+
+	unsigned char clear_r = 0, clear_g = 0, clear_b = 0;
 
 	int up = 0, 		up_justchanged;
 	int down = 0, 		down_justchanged;
@@ -133,6 +116,9 @@ int main(int argc, char **argv) {
 
 	unsigned char memory[256] = {};
 
+	// TODO execute start instructions
+
+	// process events until window is closed
 	while (running) {
 
 		up_justchanged       = 0;
@@ -208,12 +194,12 @@ int main(int argc, char **argv) {
 		SDL_SetRenderDrawColor(renderer, clear_r, clear_g, clear_b, 255); 	// clear screen_buffer to clear color (default black)
 		SDL_RenderClear(renderer);
 
-		// process/draw
+		// TODO execute frame instructions
 		if (up) { memory[1]--; }
 		if (down) { memory[1]++; }
 		if (left) { memory[0]--; }
 		if (right) { memory[0]++; }
-		draw_sprite(0, memory[0], memory[1], 0);
+		draw_sprite(renderer, spritesheet, 0, memory[0], memory[1], 0);
 
 		SDL_SetRenderTarget(renderer, NULL); 								// reset render target back to window
 		SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 			// render screen_buffer
