@@ -1,25 +1,27 @@
 # GameKitty
 
-Game framework in C that compiles to WebASM + WebGL for lightweight 2D games.
-
+Game framework in C that compiles to WASM for lightweight 2D games.
 
 ## Installation
 
-1. GameKitty relies on _. These can be installed __on Mac/Linux__ with the following commands:
+1. GameKitty relies on Emscripten, SDL2, and SDL2 Image. These can be installed __on Mac/Linux__ with the following commands:
 
 ```
-_
+brew install emscripten
+brew install sdl2
+brew install sdl2_image
 ```
 
-2. Then, clone the repository.
+2. Then, set up the build environment.
 
 ```
 git clone https://github.com/dairycultist/GameKitty
 cd GameKitty
 ```
 
-3. Finally, build GameKitty and launch it with the demo game.
+3. Finally, build and launch the demo game.
 
 ```
-make demo
+emcc main.c -o index.html -s USE_SDL=2
+emrun index.html
 ```
