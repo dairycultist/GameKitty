@@ -1,8 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#include "asm_to_bin.h"
-
 // screen size
 #define WIDTH 240
 #define HEIGHT 160
@@ -18,7 +16,10 @@
 /*
  * rendering
  */
-static void draw_sprite(SDL_Renderer *renderer, SDL_Texture *spritesheet, int index, int x, int y, int flip) {
+static SDL_Renderer *renderer;
+static SDL_Texture *spritesheet;
+
+static void draw_sprite(int index, int x, int y, int flip) {
 
 	SDL_Rect copy_rect = {
 
@@ -34,14 +35,21 @@ static void draw_sprite(SDL_Renderer *renderer, SDL_Texture *spritesheet, int in
 }
 
 /*
+ * TODO have programmer implement this
+ */
+void GK_init() {
+
+}
+
+void GK_frame() {
+
+	draw_sprite(0, 40, 40, 0);
+}
+
+/*
  * main logic
  */
-int main(int argc, char **argv) {
-
-	if (argc != 3) {
-		printf("Format: %s path/to/instructions.txt path/to/spritesheet.png\n", argv[0]);
-		return 1;
-	}
+int main(void) {
 
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		fprintf(stderr, "\x1b[31m[GameKitty] Error initializing SDL:\n%s\n\x1b[0m", SDL_GetError());
@@ -55,7 +63,7 @@ int main(int argc, char **argv) {
 		return 1;
     }
 
-	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
+	renderer = SDL_CreateRenderer(window, -1, 0);
 
 	if (!renderer) {
 		fprintf(stderr, "\x1b[31m[GameKitty] Error creating renderer:\n%s\n\x1b[0m", SDL_GetError());
@@ -69,7 +77,7 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
-	SDL_Texture *spritesheet = IMG_LoadTexture(renderer, argv[2]);
+	spritesheet = IMG_LoadTexture(renderer, "spritesheet.png");
 
 	if (!spritesheet) {
 		fprintf(stderr, "\x1b[31m[GameKitty] Could not read spritesheet\n\x1b[0m");
@@ -87,13 +95,6 @@ int main(int argc, char **argv) {
 			return 1;
 		}
 	}
-
-	// parse code into two series of instructions, start and frame
-	unsigned char start_instr[65536] = {};
-	unsigned char frame_instr[65536] = {};
-
-	if (asm_to_bin(argv[1], start_instr, frame_instr))
-		return 1;
 
 	// print controls
 	printf("\n[GameKitty] Good to go!\n\n");
@@ -120,9 +121,7 @@ int main(int argc, char **argv) {
 	int action_x = 0, 	action_x_justchanged;
 	int action_y = 0, 	action_y_justchanged;
 
-	unsigned char memory[256] = {};
-
-	// TODO execute start instructions
+	GK_init();
 
 	// process events until window is closed
 	while (running) {
@@ -200,32 +199,7 @@ int main(int argc, char **argv) {
 		SDL_SetRenderDrawColor(renderer, clear_r, clear_g, clear_b, 255); 	// clear screen_buffer to clear color (default black)
 		SDL_RenderClear(renderer);
 
-		// execute frame instructions
-		for (int i = 0; i < 65536; i++) {
-
-			switch (frame_instr[i]) {
-
-				case I_FINISH:
-					i = 65536;
-					break;
-
-				case I_SPR_III:
-					draw_sprite(
-						renderer,
-						spritesheet,
-						frame_instr[i + 1],
-						frame_instr[i + 2] | ((signed short) frame_instr[i + 3] << 8),
-						frame_instr[i + 4] | ((signed short) frame_instr[i + 5] << 8),
-						0
-					);
-					i += 5;
-					break;
-				
-				default:
-					fprintf(stderr, "\x1b[31m[GameKitty] Encountered unexpected instruction: 0x%02x\n\x1b[0m", frame_instr[i]);
-					return 1;
-			}
-		}
+		GK_frame();
 
 		SDL_SetRenderTarget(renderer, NULL); 								// reset render target back to window
 		SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 			// render screen_buffer
