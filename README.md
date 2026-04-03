@@ -22,6 +22,5 @@ cd GameKitty
 3. Finally, build and launch the demo game.
 
 ```
-emcc main.c -o index.html -s USE_SDL=2
-emrun index.html
+sudo make run
 ```

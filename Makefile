@@ -1,10 +1,10 @@
-.PHONY: demo clean
+.PHONY: run clean
 
-GameKitty: game_kitty.c
-	gcc -o GameKitty game_kitty.c -lSDL2_image $(shell sdl2-config --cflags) $(shell sdl2-config --libs)
+index.html: game_kitty.c
+	emcc game_kitty.c -o index.html -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png","jpg"]' --embed-file spritesheet.png
 
-demo: GameKitty
-	./GameKitty
+run: index.html
+	emrun index.html
 
 clean:
-	rm GameKitty
+	rm index.js index.wasm index.html

@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <emscripten.h>
 
 // screen size
 #define WIDTH 240
@@ -17,6 +18,7 @@
  * rendering
  */
 static SDL_Renderer *renderer;
+static SDL_Texture *screen_buffer;
 static SDL_Texture *spritesheet;
 
 static void draw_sprite(int index, int x, int y, int flip) {
@@ -47,6 +49,101 @@ void GK_frame() {
 }
 
 /*
+ * emscripten main loop
+ */
+SDL_Event event;
+SDL_Rect letterbox = { 0, 0, WIDTH * 2, HEIGHT * 2 };
+
+unsigned char clear_r = 0, clear_g = 0, clear_b = 0;
+
+int up = 0, 		up_justchanged;
+int down = 0, 		down_justchanged;
+int left = 0, 		left_justchanged;
+int right = 0, 		right_justchanged;
+int action_a = 0, 	action_a_justchanged;
+int action_b = 0, 	action_b_justchanged;
+int action_x = 0, 	action_x_justchanged;
+int action_y = 0, 	action_y_justchanged;
+
+static void main_loop() {
+
+	up_justchanged       = 0;
+	down_justchanged     = 0;
+	left_justchanged     = 0;
+	right_justchanged    = 0;
+	action_a_justchanged = 0;
+	action_b_justchanged = 0;
+	action_x_justchanged = 0;
+	action_y_justchanged = 0;
+
+	while (SDL_PollEvent(&event)) {
+
+		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED) {
+
+			#define MIN(a, b) ((a) > (b) ? (b) : (a))
+
+			// dynamically change letterbox based on screen resize
+			letterbox.w = MIN(event.window.data1, event.window.data2 * ASPECT_RATIO);
+			letterbox.h = MIN(event.window.data2, event.window.data1 / ASPECT_RATIO);
+
+			letterbox.x = (event.window.data1 - letterbox.w) / 2;
+			letterbox.y = (event.window.data2 - letterbox.h) / 2;
+
+		} else if ((event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) && !event.key.repeat) {
+
+			switch (event.key.keysym.scancode) {
+				case SDL_SCANCODE_UP:
+					up = event.key.state == SDL_PRESSED;
+					up_justchanged = 1;
+					break;
+				case SDL_SCANCODE_DOWN:
+					down = event.key.state == SDL_PRESSED;
+					down_justchanged = 1;
+					break;
+				case SDL_SCANCODE_LEFT:
+					left = event.key.state == SDL_PRESSED;
+					left_justchanged = 1;
+					break;
+				case SDL_SCANCODE_RIGHT:
+					right = event.key.state == SDL_PRESSED;
+					right_justchanged = 1;
+					break;
+				case SDL_SCANCODE_Z:
+					action_a = event.key.state == SDL_PRESSED;
+					action_a_justchanged = 1;
+					break;
+				case SDL_SCANCODE_X:
+					action_b = event.key.state == SDL_PRESSED;
+					action_b_justchanged = 1;
+					break;
+				case SDL_SCANCODE_A:
+					action_x = event.key.state == SDL_PRESSED;
+					action_x_justchanged = 1;
+					break;
+				case SDL_SCANCODE_S:
+					action_y = event.key.state == SDL_PRESSED;
+					action_y_justchanged = 1;
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+	SDL_SetRenderDrawColor(renderer, 40, 40, 40, 255); 					// clear window to grey
+	SDL_RenderClear(renderer);
+	SDL_SetRenderTarget(renderer, screen_buffer); 						// set render target to screen_buffer
+	SDL_SetRenderDrawColor(renderer, clear_r, clear_g, clear_b, 255); 	// clear screen_buffer to clear color (default black)
+	SDL_RenderClear(renderer);
+
+	GK_frame();
+
+	SDL_SetRenderTarget(renderer, NULL); 								// reset render target back to window
+	SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 			// render screen_buffer
+	SDL_RenderPresent(renderer); 										// present rendered content to screen
+}
+
+/*
  * main logic
  */
 int main(void) {
@@ -70,7 +167,7 @@ int main(void) {
 		return 1;
 	}
 
-	SDL_Texture *screen_buffer = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, WIDTH, HEIGHT);
+	screen_buffer = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, WIDTH, HEIGHT);
 
 	if (!screen_buffer) {
 		fprintf(stderr, "\x1b[31m[GameKitty] Error creating screen buffer:\n%s\n\x1b[0m", SDL_GetError());
@@ -104,115 +201,17 @@ int main(void) {
 	printf("Action X : A\n");
 	printf("Action Y : S\n");
 
-	// prepare
-	SDL_Event event;
-	SDL_Rect letterbox = { 0, 0, WIDTH * 2, HEIGHT * 2 };
-
-	char running = 1;
-
-	unsigned char clear_r = 0, clear_g = 0, clear_b = 0;
-
-	int up = 0, 		up_justchanged;
-	int down = 0, 		down_justchanged;
-	int left = 0, 		left_justchanged;
-	int right = 0, 		right_justchanged;
-	int action_a = 0, 	action_a_justchanged;
-	int action_b = 0, 	action_b_justchanged;
-	int action_x = 0, 	action_x_justchanged;
-	int action_y = 0, 	action_y_justchanged;
-
+	// start program
 	GK_init();
+	emscripten_set_main_loop(main_loop, 0, 1);
 
-	// process events until window is closed
-	while (running) {
+	// this code is never reached
 
-		up_justchanged       = 0;
-		down_justchanged     = 0;
-		left_justchanged     = 0;
-		right_justchanged    = 0;
-		action_a_justchanged = 0;
-		action_b_justchanged = 0;
-		action_x_justchanged = 0;
-		action_y_justchanged = 0;
+	// SDL_DestroyTexture(spritesheet);
 
-		while (SDL_PollEvent(&event)) {
-
-			if (event.type == SDL_QUIT) {
-
-				running = 0;
-
-			} else if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED) {
-
-				#define MIN(a, b) ((a) > (b) ? (b) : (a))
-
-				// dynamically change letterbox based on screen resize
-				letterbox.w = MIN(event.window.data1, event.window.data2 * ASPECT_RATIO);
-				letterbox.h = MIN(event.window.data2, event.window.data1 / ASPECT_RATIO);
-
-				letterbox.x = (event.window.data1 - letterbox.w) / 2;
-				letterbox.y = (event.window.data2 - letterbox.h) / 2;
-
-			} else if ((event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) && !event.key.repeat) {
-
-				switch (event.key.keysym.scancode) {
-					case SDL_SCANCODE_UP:
-						up = event.key.state == SDL_PRESSED;
-						up_justchanged = 1;
-						break;
-					case SDL_SCANCODE_DOWN:
-						down = event.key.state == SDL_PRESSED;
-						down_justchanged = 1;
-						break;
-					case SDL_SCANCODE_LEFT:
-						left = event.key.state == SDL_PRESSED;
-						left_justchanged = 1;
-						break;
-					case SDL_SCANCODE_RIGHT:
-						right = event.key.state == SDL_PRESSED;
-						right_justchanged = 1;
-						break;
-					case SDL_SCANCODE_Z:
-						action_a = event.key.state == SDL_PRESSED;
-						action_a_justchanged = 1;
-						break;
-					case SDL_SCANCODE_X:
-						action_b = event.key.state == SDL_PRESSED;
-						action_b_justchanged = 1;
-						break;
-					case SDL_SCANCODE_A:
-						action_x = event.key.state == SDL_PRESSED;
-						action_x_justchanged = 1;
-						break;
-					case SDL_SCANCODE_S:
-						action_y = event.key.state == SDL_PRESSED;
-						action_y_justchanged = 1;
-						break;
-					default:
-						break;
-				}
-			}
-		}
-
-		SDL_SetRenderDrawColor(renderer, 40, 40, 40, 255); 					// clear window to grey
-		SDL_RenderClear(renderer);
-		SDL_SetRenderTarget(renderer, screen_buffer); 						// set render target to screen_buffer
-		SDL_SetRenderDrawColor(renderer, clear_r, clear_g, clear_b, 255); 	// clear screen_buffer to clear color (default black)
-		SDL_RenderClear(renderer);
-
-		GK_frame();
-
-		SDL_SetRenderTarget(renderer, NULL); 								// reset render target back to window
-		SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 			// render screen_buffer
-		SDL_RenderPresent(renderer); 										// present rendered content to screen
-
-		SDL_Delay(1000 / 60);
-	}
-
-	SDL_DestroyTexture(spritesheet);
-
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
-	SDL_Quit();
+	// SDL_DestroyRenderer(renderer);
+	// SDL_DestroyWindow(window);
+	// SDL_Quit();
 
 	return 0;
 }
