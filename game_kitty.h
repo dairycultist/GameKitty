@@ -28,7 +28,7 @@ typedef struct {
 
 // helpers
 void set_clear_color(unsigned char r, unsigned char g, unsigned char b);
-void draw_sprite(int index, int x, int y, int flip);
+void draw_sprite(unsigned int index, int x, int y, int flip);
 
 // implemented by the programmer
 void GK_init();

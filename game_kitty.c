@@ -20,7 +20,7 @@ void set_clear_color(unsigned char r, unsigned char g, unsigned char b) {
 	clear_b = b;
 }
 
-void draw_sprite(int index, int x, int y, int flip) {
+void draw_sprite(unsigned int index, int x, int y, int flip) {
 
 	SDL_Rect copy_rect = {
 
