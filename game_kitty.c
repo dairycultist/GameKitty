@@ -2,17 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include <emscripten.h>
 
-// screen size
-#define WIDTH 240
-#define HEIGHT 160
-#define ASPECT_RATIO (WIDTH / (float) HEIGHT)
-
-// width and height of sprites
-#define SPR_DIM 16
-
-// sprite sheet dimensions in sprites
-#define SPRS_WIDTH 16
-#define SPRS_HEIGHT 16
+#include "game_kitty.h"
 
 /*
  * rendering
@@ -21,7 +11,16 @@ static SDL_Renderer *renderer;
 static SDL_Texture *screen_buffer;
 static SDL_Texture *spritesheet;
 
-static void draw_sprite(int index, int x, int y, int flip) {
+static unsigned char clear_r = 0, clear_g = 0, clear_b = 0;
+
+void set_clear_color(unsigned char r, unsigned char g, unsigned char b) {
+
+	clear_r = r;
+	clear_g = g;
+	clear_b = b;
+}
+
+void draw_sprite(int index, int x, int y, int flip) {
 
 	SDL_Rect copy_rect = {
 
@@ -37,33 +36,19 @@ static void draw_sprite(int index, int x, int y, int flip) {
 }
 
 /*
- * TODO have programmer implement this
- */
-void GK_init() {
-
-}
-
-void GK_frame() {
-
-	draw_sprite(0, 40, 40, 0);
-}
-
-/*
  * emscripten main loop
  */
-SDL_Event event;
-SDL_Rect letterbox = { 0, 0, WIDTH * 2, HEIGHT * 2 };
+static SDL_Event event;
+static SDL_Rect letterbox = { 0, 0, WIDTH * 2, HEIGHT * 2 };
 
-unsigned char clear_r = 0, clear_g = 0, clear_b = 0;
-
-int up = 0, 		up_justchanged;
-int down = 0, 		down_justchanged;
-int left = 0, 		left_justchanged;
-int right = 0, 		right_justchanged;
-int action_a = 0, 	action_a_justchanged;
-int action_b = 0, 	action_b_justchanged;
-int action_x = 0, 	action_x_justchanged;
-int action_y = 0, 	action_y_justchanged;
+static int up = 0, 			up_justchanged;
+static int down = 0, 		down_justchanged;
+static int left = 0, 		left_justchanged;
+static int right = 0, 		right_justchanged;
+static int action_a = 0, 	action_a_justchanged;
+static int action_b = 0, 	action_b_justchanged;
+static int action_x = 0, 	action_x_justchanged;
+static int action_y = 0, 	action_y_justchanged;
 
 static void main_loop() {
 
