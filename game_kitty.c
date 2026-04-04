@@ -41,25 +41,18 @@ void draw_sprite(int index, int x, int y, int flip) {
 static SDL_Event event;
 static SDL_Rect letterbox = { 0, 0, WIDTH * 2, HEIGHT * 2 };
 
-static int up = 0, 			up_justchanged;
-static int down = 0, 		down_justchanged;
-static int left = 0, 		left_justchanged;
-static int right = 0, 		right_justchanged;
-static int action_a = 0, 	action_a_justchanged;
-static int action_b = 0, 	action_b_justchanged;
-static int action_x = 0, 	action_x_justchanged;
-static int action_y = 0, 	action_y_justchanged;
+static Input input;
 
 static void main_loop() {
 
-	up_justchanged       = 0;
-	down_justchanged     = 0;
-	left_justchanged     = 0;
-	right_justchanged    = 0;
-	action_a_justchanged = 0;
-	action_b_justchanged = 0;
-	action_x_justchanged = 0;
-	action_y_justchanged = 0;
+	input.up_justchanged       = 0;
+	input.down_justchanged     = 0;
+	input.left_justchanged     = 0;
+	input.right_justchanged    = 0;
+	input.action_a_justchanged = 0;
+	input.action_b_justchanged = 0;
+	input.action_x_justchanged = 0;
+	input.action_y_justchanged = 0;
 
 	while (SDL_PollEvent(&event)) {
 
@@ -78,36 +71,36 @@ static void main_loop() {
 
 			switch (event.key.keysym.scancode) {
 				case SDL_SCANCODE_UP:
-					up = event.key.state == SDL_PRESSED;
-					up_justchanged = 1;
+					input.up = event.key.state == SDL_PRESSED;
+					input.up_justchanged = 1;
 					break;
 				case SDL_SCANCODE_DOWN:
-					down = event.key.state == SDL_PRESSED;
-					down_justchanged = 1;
+					input.down = event.key.state == SDL_PRESSED;
+					input.down_justchanged = 1;
 					break;
 				case SDL_SCANCODE_LEFT:
-					left = event.key.state == SDL_PRESSED;
-					left_justchanged = 1;
+					input.left = event.key.state == SDL_PRESSED;
+					input.left_justchanged = 1;
 					break;
 				case SDL_SCANCODE_RIGHT:
-					right = event.key.state == SDL_PRESSED;
-					right_justchanged = 1;
+					input.right = event.key.state == SDL_PRESSED;
+					input.right_justchanged = 1;
 					break;
 				case SDL_SCANCODE_Z:
-					action_a = event.key.state == SDL_PRESSED;
-					action_a_justchanged = 1;
+					input.action_a = event.key.state == SDL_PRESSED;
+					input.action_a_justchanged = 1;
 					break;
 				case SDL_SCANCODE_X:
-					action_b = event.key.state == SDL_PRESSED;
-					action_b_justchanged = 1;
+					input.action_b = event.key.state == SDL_PRESSED;
+					input.action_b_justchanged = 1;
 					break;
 				case SDL_SCANCODE_A:
-					action_x = event.key.state == SDL_PRESSED;
-					action_x_justchanged = 1;
+					input.action_x = event.key.state == SDL_PRESSED;
+					input.action_x_justchanged = 1;
 					break;
 				case SDL_SCANCODE_S:
-					action_y = event.key.state == SDL_PRESSED;
-					action_y_justchanged = 1;
+					input.action_y = event.key.state == SDL_PRESSED;
+					input.action_y_justchanged = 1;
 					break;
 				default:
 					break;
@@ -121,7 +114,7 @@ static void main_loop() {
 	SDL_SetRenderDrawColor(renderer, clear_r, clear_g, clear_b, 255); 	// clear screen_buffer to clear color (default black)
 	SDL_RenderClear(renderer);
 
-	GK_frame();
+	GK_frame(&input);
 
 	SDL_SetRenderTarget(renderer, NULL); 								// reset render target back to window
 	SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 			// render screen_buffer
