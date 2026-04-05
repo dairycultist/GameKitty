@@ -2,7 +2,7 @@
 
 build/index.html: *.c *.h spritesheet.png index.html
 	mkdir -p build
-	emcc $< -o build/index.html -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]' --embed-file spritesheet.png
+	emcc *.c -o build/index.html -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]' --embed-file spritesheet.png
 	sudo chmod -R 777 build
 	cp index.html build/index.html
 
