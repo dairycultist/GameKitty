@@ -13,6 +13,8 @@
 #define SPRS_WIDTH 16
 #define SPRS_HEIGHT 16
 
+// TODO SpriteGrid object that you initialized with an unsigned int * of indices and a width + height. good for multisprites and maps. ignores MAX_INT indices and positions drawn out of bounds
+
 typedef struct {
 
 	int up, 		up_justchanged;
