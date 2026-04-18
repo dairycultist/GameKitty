@@ -1,4 +1,4 @@
-# GameKitty
+![Game Kitty logo](logo.png)
 
 Game framework in C that compiles to WASM for lightweight 2D games.
 
