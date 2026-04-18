@@ -20,12 +20,12 @@ void set_clear_color(unsigned char r, unsigned char g, unsigned char b) {
 	clear_b = b;
 }
 
-void draw_sprite(unsigned int index, int x, int y, int flip) {
+void draw_sprite(sprite_t sprite, int x, int y, int flip) {
 
 	SDL_Rect copy_rect = {
 
-		(index % SPRS_WIDTH) * SPR_DIM,
-		(index / SPRS_WIDTH) * SPR_DIM,
+		(sprite % SPRS_WIDTH) * SPR_DIM,
+		(sprite / SPRS_WIDTH) * SPR_DIM,
 		SPR_DIM,
 		SPR_DIM
 	};
