@@ -35,6 +35,17 @@ void draw_sprite(sprite_t sprite, int x, int y, int flip) {
 	SDL_RenderCopyEx(renderer, spritesheet, &copy_rect, &paste_rect, 0.0, NULL, flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
+void draw_sprite_grid(SpriteGrid *sprite_grid, int x, int y) {
+
+	for (int w = 0; w < sprite_grid->w; w++) {
+		for (int h = 0; h < sprite_grid->h; h++) {
+		
+			// TODO ignore index=0 and positions outside of screen
+			draw_sprite(sprite_grid->sprites[w + h * sprite_grid->w], x + w * SPR_DIM, y + h * SPR_DIM, 0);
+		}
+	}
+}
+
 /*
  * emscripten main loop
  */

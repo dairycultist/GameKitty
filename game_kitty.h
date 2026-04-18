@@ -15,7 +15,13 @@
 
 typedef unsigned char sprite_t;
 
-// TODO SpriteGrid object that you initialize with a sprite_t * of indices and a width + height. good for multisprites and maps. ignores index=0 and positions drawn out of bounds
+typedef struct {
+
+	sprite_t *sprites;
+	int w;
+	int h;
+
+} SpriteGrid; // good for multisprites and maps
 
 typedef struct {
 
@@ -30,9 +36,10 @@ typedef struct {
 
 } Input;
 
-// helpers
+// built-ins
 void set_clear_color(unsigned char r, unsigned char g, unsigned char b);
 void draw_sprite(sprite_t sprite, int x, int y, int flip);
+void draw_sprite_grid(SpriteGrid *sprite_grid, int x, int y);
 
 // implemented by the programmer
 void GK_init();
