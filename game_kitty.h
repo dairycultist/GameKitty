@@ -13,9 +13,9 @@
 #define SPRS_WIDTH 16
 #define SPRS_HEIGHT 16
 
-typedef unsigned int sprite_t;
+typedef unsigned char sprite_t;
 
-// TODO SpriteGrid object that you initialized with an sprite_t * of indices and a width + height. good for multisprites and maps. ignores index=0 and positions drawn out of bounds
+// TODO SpriteGrid object that you initialize with a sprite_t * of indices and a width + height. good for multisprites and maps. ignores index=0 and positions drawn out of bounds
 
 typedef struct {
 

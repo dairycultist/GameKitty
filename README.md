@@ -27,6 +27,6 @@ sudo make run
 
 ## Uploading to Itch.io
 
-After building, go into the `build` folder and zip `index.html`, `index.js`, and `index.wasm` together. This zip is what you will upload to Itch.io.
+After building, go into the `build` folder and zip `index.html`, `index.js`, and `index.wasm` together. This zip is what you will upload to Itch.io. Remember to check `This file will be played in the browser` on the uploaded file.
 
-On the Itch.io edit page, under `Embed options > Viewport dimensions`, set the width/height to 480x320.
+*Optional but recommended:* On the Itch.io edit page, under `Embed options > Viewport dimensions`, set the width/height to 480x320.
