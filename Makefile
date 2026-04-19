@@ -1,3 +1,5 @@
+# This file is intentionally left unlicensed under Apache License, Version 2.0.
+
 .PHONY: run clean
 
 build/index.html: *.c *.h spritesheet.png index.html

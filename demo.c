@@ -1,3 +1,5 @@
+// This file is intentionally left unlicensed under Apache License, Version 2.0.
+
 #include "game_kitty.h"
 #include "stdlib.h"
 #include "string.h"
