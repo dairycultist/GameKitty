@@ -30,3 +30,7 @@ sudo make run
 After building, go into the `build` folder and zip `index.html`, `index.js`, and `index.wasm` together. This zip is what you will upload to Itch.io. Remember to check `This file will be played in the browser` on the uploaded file.
 
 *Optional but recommended:* On the Itch.io edit page, under `Embed options > Viewport dimensions`, set the width/height to 480x320.
+
+## Copyright
+
+GameKitty is licensed under Apache License, Version 2.0. **The only files that fall under this license are** `game_kitty.c` `game_kitty.h` **and** `logo.png`**.** All other files are CC0.
