@@ -21,6 +21,8 @@ cd GameKitty
 mv demo.c ../demo.c
 mv spritesheet.png ../spritesheet.png
 mv Makefile ../Makefile
+mv .gitignore ../.gitignore
+cd ..
 ```
 
 3. Finally, build and launch the demo game.
