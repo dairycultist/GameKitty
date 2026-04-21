@@ -15,8 +15,12 @@ brew install sdl2_image
 2. Then, set up the build environment.
 
 ```
+cd <folder you want to be your build environment>
 git clone https://github.com/dairycultist/GameKitty
 cd GameKitty
+mv demo.c ../demo.c
+mv spritesheet.png ../spritesheet.png
+mv Makefile ../Makefile
 ```
 
 3. Finally, build and launch the demo game.
