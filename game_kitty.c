@@ -23,6 +23,9 @@
 
 #include "game_kitty.h"
 
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define MIN(a, b) ((a) > (b) ? (b) : (a))
+
 /*
  * rendering
  */
@@ -56,11 +59,22 @@ void draw_sprite(sprite_t sprite, int x, int y, int flip) {
 
 void draw_sprite_grid(SpriteGrid *sprite_grid, int x, int y) {
 
-	for (int w = 0; w < sprite_grid->w; w++) {
-		for (int h = 0; h < sprite_grid->h; h++) {
+	// define bounds so only positions within the screen are drawn
+	int w0 = MAX(0, -x / SPR_DIM);
+	int h0 = MAX(0, -y / SPR_DIM);
+
+	int w1 = MIN(sprite_grid->w, (WIDTH - x) / SPR_DIM + 1);
+	int h1 = MIN(sprite_grid->h, (HEIGHT - y) / SPR_DIM + 1);
+
+	// draw
+	for (int w = w0; w < w1; w++) {
+		for (int h = h0; h < h1; h++) {
 		
-			// TODO ignore index=0 and positions outside of screen
-			draw_sprite(sprite_grid->sprites[w + h * sprite_grid->w], x + w * SPR_DIM, y + h * SPR_DIM, 0);
+			sprite_t sprite = sprite_grid->sprites[w + h * sprite_grid->w];
+
+			// ignore sprite=0 to allow empty areas
+			if (sprite != 0)
+				draw_sprite(sprite, x + w * SPR_DIM, y + h * SPR_DIM, 0);
 		}
 	}
 }
@@ -87,8 +101,6 @@ static void main_loop() {
 	while (SDL_PollEvent(&event)) {
 
 		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED) {
-
-			#define MIN(a, b) ((a) > (b) ? (b) : (a))
 
 			// dynamically change letterbox based on screen resize
 			letterbox.w = MIN(event.window.data1, event.window.data2 * ASPECT_RATIO);

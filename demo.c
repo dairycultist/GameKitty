@@ -13,13 +13,13 @@ void GK_init() {
 
 	set_clear_color(10, 40, 130);
 
-	test.sprites = malloc(sizeof(sprite_t) * 4);
-	test.sprites[0] = 16;
-	test.sprites[1] = 17;
-	test.sprites[2] = 18;
-	test.sprites[3] = 19;
-	test.w = 2;
-	test.h = 2;
+	test.sprites = malloc(sizeof(sprite_t) * 16);
+	test.w = 4;
+	test.h = 4;
+
+	for (int i = 0; i < 16; i++) {
+		test.sprites[i] = i + 16;
+	}
 }
 
 void GK_frame(const Input *input) {
@@ -36,7 +36,5 @@ void GK_frame(const Input *input) {
 	if (input->right)
 		px++;
 
-	draw_sprite(0, px, py, 0);
-
-	draw_sprite_grid(&test, 10, 10);
+	draw_sprite_grid(&test, px, py);
 }
