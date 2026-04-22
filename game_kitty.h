@@ -42,6 +42,11 @@ typedef struct {
 
 } SpriteGrid; // good for multisprites and maps
 
+// helper macros for converting between 1D (i) and 2D (x,y) representations of SpriteGrid space
+#define ITOX(sprite_grid, i) ((i) % (sprite_grid.w))
+#define ITOY(sprite_grid, i) ((i) / (sprite_grid.w))
+#define XYTOI(sprite_grid, x, y) ((x) + (y) * (sprite_grid.w))
+
 typedef struct {
 
 	int up, 		up_justchanged;
