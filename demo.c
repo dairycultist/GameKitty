@@ -14,17 +14,9 @@ void GK_init() {
 
 void GK_frame(const Input *input) {
 
-	if (input->up)
-		py--;
-
-	if (input->down)
-		py++;
-
-	if (input->left)
-		px--;
-
-	if (input->right)
-		px++;
-
-	draw_string("APPLES\nAND PEARS", px, py);
+	if (input->mouse_down) {
+		draw_string("DOWN\nDOWN", input->mouse_x, input->mouse_y);
+	} else {
+		draw_string("UP\nUP", input->mouse_x, input->mouse_y);
+	}
 }

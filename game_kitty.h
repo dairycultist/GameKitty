@@ -29,21 +29,9 @@
 #define CHAR_W 16
 #define CHAR_H 16
 
-// helper macros for converting between 1D (i) and 2D (x,y) representations of SpriteGrid space
-#define ITOX(sprite_grid, i) ((i) % (sprite_grid.w))
-#define ITOY(sprite_grid, i) ((i) / (sprite_grid.w))
-#define XYTOI(sprite_grid, x, y) ((x) + (y) * (sprite_grid.w))
-
 typedef struct {
 
-	int up, 		up_justchanged;
-	int down, 		down_justchanged;
-	int left, 		left_justchanged;
-	int right, 		right_justchanged;
-	int action_a, 	action_a_justchanged;
-	int action_b, 	action_b_justchanged;
-	int action_x, 	action_x_justchanged;
-	int action_y, 	action_y_justchanged;
+	int mouse_x, mouse_y, mouse_down;
 
 } Input;
 

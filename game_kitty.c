@@ -29,6 +29,7 @@
 /*
  * rendering
  */
+static SDL_Window *window;
 static SDL_Renderer *renderer;
 static SDL_Texture *screen_buffer;
 static SDL_Texture *font;
@@ -82,15 +83,6 @@ static Input input;
 
 static void main_loop() {
 
-	input.up_justchanged       = 0;
-	input.down_justchanged     = 0;
-	input.left_justchanged     = 0;
-	input.right_justchanged    = 0;
-	input.action_a_justchanged = 0;
-	input.action_b_justchanged = 0;
-	input.action_x_justchanged = 0;
-	input.action_y_justchanged = 0;
-
 	while (SDL_PollEvent(&event)) {
 
 		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED) {
@@ -102,44 +94,15 @@ static void main_loop() {
 			letterbox.x = (event.window.data1 - letterbox.w) / 2;
 			letterbox.y = (event.window.data2 - letterbox.h) / 2;
 
-		} else if ((event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) && !event.key.repeat) {
+		} else if (event.type == SDL_MOUSEMOTION) {
 
-			switch (event.key.keysym.scancode) {
-				case SDL_SCANCODE_UP:
-					input.up = event.key.state == SDL_PRESSED;
-					input.up_justchanged = 1;
-					break;
-				case SDL_SCANCODE_DOWN:
-					input.down = event.key.state == SDL_PRESSED;
-					input.down_justchanged = 1;
-					break;
-				case SDL_SCANCODE_LEFT:
-					input.left = event.key.state == SDL_PRESSED;
-					input.left_justchanged = 1;
-					break;
-				case SDL_SCANCODE_RIGHT:
-					input.right = event.key.state == SDL_PRESSED;
-					input.right_justchanged = 1;
-					break;
-				case SDL_SCANCODE_Z:
-					input.action_a = event.key.state == SDL_PRESSED;
-					input.action_a_justchanged = 1;
-					break;
-				case SDL_SCANCODE_X:
-					input.action_b = event.key.state == SDL_PRESSED;
-					input.action_b_justchanged = 1;
-					break;
-				case SDL_SCANCODE_A:
-					input.action_x = event.key.state == SDL_PRESSED;
-					input.action_x_justchanged = 1;
-					break;
-				case SDL_SCANCODE_S:
-					input.action_y = event.key.state == SDL_PRESSED;
-					input.action_y_justchanged = 1;
-					break;
-				default:
-					break;
-			}
+			input.mouse_x = (event.motion.x - letterbox.x) * WIDTH / letterbox.w;
+			input.mouse_y = (event.motion.y - letterbox.y) * HEIGHT / letterbox.h;
+
+		} else if (event.type == SDL_MOUSEBUTTONDOWN) {
+			input.mouse_down = 1;
+		} else if (event.type == SDL_MOUSEBUTTONUP) {
+			input.mouse_down = 0;
 		}
 	}
 
@@ -166,7 +129,7 @@ int main(void) {
 		return 1;
 	}
 
-	SDL_Window *window = SDL_CreateWindow("GameKitty", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH * 2, HEIGHT * 2, SDL_WINDOW_RESIZABLE);
+	window = SDL_CreateWindow("GameKitty", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH * 2, HEIGHT * 2, SDL_WINDOW_RESIZABLE);
 
 	if (!window) {
 		fprintf(stderr, "\x1b[31m[GameKitty] Error creating window:\n%s\n\x1b[0m", SDL_GetError());
@@ -196,11 +159,6 @@ int main(void) {
 
 	// print controls
 	printf("\n[GameKitty] Good to go!\n\n");
-	printf("D-PAD    : Arrow keys\n");
-	printf("Action A : Z\n");
-	printf("Action B : X\n");
-	printf("Action X : A\n");
-	printf("Action Y : S\n");
 
 	// start program
 	GK_init();
