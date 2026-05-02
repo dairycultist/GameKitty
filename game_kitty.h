@@ -21,8 +21,8 @@
 #define GK_MAIN
 
 // screen size
-#define WIDTH 240
-#define HEIGHT 160
+#define WIDTH 512
+#define HEIGHT 384
 #define ASPECT_RATIO (WIDTH / (float) HEIGHT)
 
 // width and height of text characters
@@ -38,9 +38,5 @@ typedef struct {
 // built-ins
 void set_clear_color(unsigned char r, unsigned char g, unsigned char b);
 void draw_string(const char *string, int x, int y);
-
-// implemented by the programmer
-void GK_init();
-void GK_frame(const Input *input);
 
 #endif

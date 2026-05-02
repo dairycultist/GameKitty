@@ -32,7 +32,9 @@
 static SDL_Window *window;
 static SDL_Renderer *renderer;
 static SDL_Texture *screen_buffer;
-static SDL_Texture *font;
+
+static SDL_Texture *tex_font;
+static SDL_Texture *tex_textbox;
 
 static unsigned char clear_r = 0, clear_g = 0, clear_b = 0;
 
@@ -43,12 +45,24 @@ void set_clear_color(unsigned char r, unsigned char g, unsigned char b) {
 	clear_b = b;
 }
 
+static void draw_texture(SDL_Texture *tex, int x, int y, int flip) {
+
+	int w, h;
+
+	SDL_QueryTexture(tex, NULL, NULL, &w, &h);
+
+	SDL_Rect copy_rect = { 0, 0, w, h };
+	SDL_Rect paste_rect = { x, y, w, h };
+
+	SDL_RenderCopyEx(renderer, tex, &copy_rect, &paste_rect, 0.0, NULL, flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+}
+
 static void draw_char(char c, int x, int y) {
 
 	SDL_Rect copy_rect = { c * CHAR_W, 0, CHAR_W, CHAR_H };
 	SDL_Rect paste_rect = { x, y, CHAR_W, CHAR_H };
 
-	SDL_RenderCopyEx(renderer, font, &copy_rect, &paste_rect, 0.0, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(renderer, tex_font, &copy_rect, &paste_rect, 0.0, NULL, SDL_FLIP_NONE);
 }
 
 void draw_string(const char *string, int x, int y) {
@@ -112,7 +126,13 @@ static void main_loop() {
 	SDL_SetRenderDrawColor(renderer, clear_r, clear_g, clear_b, 255); 	// clear screen_buffer to clear color (default black)
 	SDL_RenderClear(renderer);
 
-	GK_frame(&input);
+	if (input.mouse_down) {
+		draw_string("DOWN\nDOWN", input.mouse_x, input.mouse_y);
+	} else {
+		draw_string("UP\nUP", input.mouse_x, input.mouse_y);
+	}
+
+	draw_texture(tex_textbox, 0, 256, 0);
 
 	SDL_SetRenderTarget(renderer, NULL); 								// reset render target back to window
 	SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 			// render screen_buffer
@@ -150,23 +170,32 @@ int main(void) {
 		return 1;
 	}
 
-	font = IMG_LoadTexture(renderer, "GameKitty/font.png");
+	tex_font = IMG_LoadTexture(renderer, "GameKitty/font.png");
 
-	if (!font) {
-		fprintf(stderr, "\x1b[31m[GameKitty] Could not read font\n\x1b[0m");
+	if (!tex_font) {
+		fprintf(stderr, "\x1b[31m[GameKitty] Could not read font texture\n\x1b[0m");
 		return 1;
 	}
 
-	// print controls
+	tex_textbox = IMG_LoadTexture(renderer, "GameKitty/textbox.png");
+
+	if (!tex_textbox) {
+		fprintf(stderr, "\x1b[31m[GameKitty] Could not read textbox texture\n\x1b[0m");
+		return 1;
+	}
+
 	printf("\n[GameKitty] Good to go!\n\n");
 
+	// init
+	set_clear_color(10, 40, 130);
+
 	// start program
-	GK_init();
 	emscripten_set_main_loop(main_loop, 0, 1);
 
 	// this code is never reached
 
-	// SDL_DestroyTexture(font);
+	// SDL_DestroyTexture(tex_font);
+	// SDL_DestroyTexture(tex_textbox);
 
 	// SDL_DestroyRenderer(renderer);
 	// SDL_DestroyWindow(window);
