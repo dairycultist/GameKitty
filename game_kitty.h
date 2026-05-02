@@ -25,22 +25,9 @@
 #define HEIGHT 160
 #define ASPECT_RATIO (WIDTH / (float) HEIGHT)
 
-// width and height of sprites
-#define SPR_DIM 16
-
-// sprite sheet dimensions in sprites
-#define SPRS_WIDTH 16
-#define SPRS_HEIGHT 16
-
-typedef unsigned char sprite_t;
-
-typedef struct {
-
-	sprite_t *sprites;
-	int w;
-	int h;
-
-} SpriteGrid; // good for multisprites and maps
+// width and height of text characters
+#define CHAR_W 16
+#define CHAR_H 16
 
 // helper macros for converting between 1D (i) and 2D (x,y) representations of SpriteGrid space
 #define ITOX(sprite_grid, i) ((i) % (sprite_grid.w))
@@ -62,8 +49,7 @@ typedef struct {
 
 // built-ins
 void set_clear_color(unsigned char r, unsigned char g, unsigned char b);
-void draw_sprite(sprite_t sprite, int x, int y, int flip);
-void draw_sprite_grid(SpriteGrid *sprite_grid, int x, int y);
+void draw_string(const char *string, int x, int y);
 
 // implemented by the programmer
 void GK_init();

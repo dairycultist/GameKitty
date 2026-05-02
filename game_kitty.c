@@ -31,7 +31,7 @@
  */
 static SDL_Renderer *renderer;
 static SDL_Texture *screen_buffer;
-static SDL_Texture *spritesheet;
+static SDL_Texture *font;
 
 static unsigned char clear_r = 0, clear_g = 0, clear_b = 0;
 
@@ -42,40 +42,33 @@ void set_clear_color(unsigned char r, unsigned char g, unsigned char b) {
 	clear_b = b;
 }
 
-void draw_sprite(sprite_t sprite, int x, int y, int flip) {
+static void draw_char(char c, int x, int y) {
 
-	SDL_Rect copy_rect = {
+	SDL_Rect copy_rect = { c * CHAR_W, 0, CHAR_W, CHAR_H };
+	SDL_Rect paste_rect = { x, y, CHAR_W, CHAR_H };
 
-		(sprite % SPRS_WIDTH) * SPR_DIM,
-		(sprite / SPRS_WIDTH) * SPR_DIM,
-		SPR_DIM,
-		SPR_DIM
-	};
-
-	SDL_Rect paste_rect = { x, y, SPR_DIM, SPR_DIM };
-
-	SDL_RenderCopyEx(renderer, spritesheet, &copy_rect, &paste_rect, 0.0, NULL, flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+	SDL_RenderCopyEx(renderer, font, &copy_rect, &paste_rect, 0.0, NULL, SDL_FLIP_NONE);
 }
 
-void draw_sprite_grid(SpriteGrid *sprite_grid, int x, int y) {
+void draw_string(const char *string, int x, int y) {
 
-	// define bounds so only positions within the screen are drawn
-	int w0 = MAX(0, -x / SPR_DIM);
-	int h0 = MAX(0, -y / SPR_DIM);
-
-	int w1 = MIN(sprite_grid->w, (WIDTH - x) / SPR_DIM + 1);
-	int h1 = MIN(sprite_grid->h, (HEIGHT - y) / SPR_DIM + 1);
+	int dx = 0;
+	int dy = 0;
 
 	// draw
-	for (int w = w0; w < w1; w++) {
-		for (int h = h0; h < h1; h++) {
-		
-			sprite_t sprite = sprite_grid->sprites[w + h * sprite_grid->w];
+	while (string[0] != '\0') {
 
-			// ignore sprite=0 to allow empty areas
-			if (sprite != 0)
-				draw_sprite(sprite, x + w * SPR_DIM, y + h * SPR_DIM, 0);
+		if (string[0] == ' ') {
+			dx++;
+		} else if (string[0] == '\n') {
+			dx = 0;
+			dy++;
+		} else {
+			draw_char(string[0] - 'A', x + CHAR_W * dx, y + (CHAR_H + 2) * dy);
+			dx++;
 		}
+
+		string++;
 	}
 }
 
@@ -194,23 +187,11 @@ int main(void) {
 		return 1;
 	}
 
-	spritesheet = IMG_LoadTexture(renderer, "spritesheet.png");
+	font = IMG_LoadTexture(renderer, "GameKitty/font.png");
 
-	if (!spritesheet) {
-		fprintf(stderr, "\x1b[31m[GameKitty] Could not read spritesheet\n\x1b[0m");
+	if (!font) {
+		fprintf(stderr, "\x1b[31m[GameKitty] Could not read font\n\x1b[0m");
 		return 1;
-	}
-
-	// verify spritesheet is legal
-	{
-		int width, height;
-
-		SDL_QueryTexture(spritesheet, NULL, NULL, &width, &height);
-
-		if (width != SPRS_WIDTH * SPR_DIM || height != SPRS_HEIGHT * SPR_DIM) {
-			fprintf(stderr, "\x1b[31m[GameKitty] Sprite sheet has incorrect dimensions; expected %dx%d, got %dx%d\n\x1b[0m", SPRS_WIDTH * SPR_DIM, SPRS_HEIGHT * SPR_DIM, width, height);
-			return 1;
-		}
 	}
 
 	// print controls
@@ -227,7 +208,7 @@ int main(void) {
 
 	// this code is never reached
 
-	// SDL_DestroyTexture(spritesheet);
+	// SDL_DestroyTexture(font);
 
 	// SDL_DestroyRenderer(renderer);
 	// SDL_DestroyWindow(window);
