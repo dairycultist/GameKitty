@@ -38,7 +38,7 @@ static SDL_Texture *tex_textbox;
 
 static unsigned char clear_r = 0, clear_g = 0, clear_b = 0;
 
-void set_clear_color(unsigned char r, unsigned char g, unsigned char b) {
+static void set_clear_color(unsigned char r, unsigned char g, unsigned char b) {
 
 	clear_r = r;
 	clear_g = g;
@@ -65,22 +65,24 @@ static void draw_char(char c, int x, int y) {
 	SDL_RenderCopyEx(renderer, tex_font, &copy_rect, &paste_rect, 0.0, NULL, SDL_FLIP_NONE);
 }
 
-void draw_string(const char *string, int x, int y) {
+static void draw_string(const char *string, int x, int y) {
 
 	int dx = 0;
 	int dy = 0;
 
 	// draw
-	while (string[0] != '\0') {
+	while (*string != '\0') {
 
-		if (string[0] == ' ') {
+		if (*string == ' ') {
 			dx++;
-		} else if (string[0] == '\n') {
+		} else if (*string == '\n') {
 			dx = 0;
 			dy++;
-		} else {
-			draw_char(string[0] - 'A', x + CHAR_W * dx, y + (CHAR_H + 2) * dy);
+		} else if (*string >= 'A' && *string <= 'Z') {
+			draw_char(*string - 'A', x + CHAR_W * dx, y + (CHAR_H + 2) * dy);
 			dx++;
+		} else {
+			dx++; // TODO draw square with ? inside
 		}
 
 		string++;
@@ -93,9 +95,11 @@ void draw_string(const char *string, int x, int y) {
 static SDL_Event event;
 static SDL_Rect letterbox = { 0, 0, WIDTH * 2, HEIGHT * 2 };
 
-static Input input;
+static int mouse_x, mouse_y, mouse_clicked;
 
 static void main_loop() {
+
+	mouse_clicked = 0;
 
 	while (SDL_PollEvent(&event)) {
 
@@ -110,13 +114,13 @@ static void main_loop() {
 
 		} else if (event.type == SDL_MOUSEMOTION) {
 
-			input.mouse_x = (event.motion.x - letterbox.x) * WIDTH / letterbox.w;
-			input.mouse_y = (event.motion.y - letterbox.y) * HEIGHT / letterbox.h;
+			mouse_x = (event.motion.x - letterbox.x) * WIDTH / letterbox.w;
+			mouse_y = (event.motion.y - letterbox.y) * HEIGHT / letterbox.h;
 
 		} else if (event.type == SDL_MOUSEBUTTONDOWN) {
-			input.mouse_down = 1;
+			mouse_clicked = 1;
 		} else if (event.type == SDL_MOUSEBUTTONUP) {
-			input.mouse_down = 0;
+			mouse_clicked = 0;
 		}
 	}
 
@@ -126,10 +130,10 @@ static void main_loop() {
 	SDL_SetRenderDrawColor(renderer, clear_r, clear_g, clear_b, 255); 	// clear screen_buffer to clear color (default black)
 	SDL_RenderClear(renderer);
 
-	if (input.mouse_down) {
-		draw_string("DOWN\nDOWN", input.mouse_x, input.mouse_y);
+	if (mouse_clicked) {
+		draw_string("DOWN\nDOWN", mouse_x, mouse_y);
 	} else {
-		draw_string("UP\nUP", input.mouse_x, input.mouse_y);
+		draw_string("UP\nUP", mouse_x, mouse_y);
 	}
 
 	draw_texture(tex_textbox, 0, 256, 0);
