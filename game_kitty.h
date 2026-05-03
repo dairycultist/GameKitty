@@ -34,6 +34,7 @@
 #define TYPE_OPTION 0x02
 #define TYPE_VISUAL_ADD 0x03
 #define TYPE_VISUAL_REMOVE 0x04
+#define TYPE_TEXT_UNPASSABLE 0x05
 
 typedef struct {
 

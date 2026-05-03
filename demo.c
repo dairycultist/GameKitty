@@ -10,7 +10,7 @@ static Event test_scene[] = {
 		TYPE_TEXT, "DOES THIS WORK"
 	},
 	{
-		TYPE_TEXT, "I HOPE SO"
+		TYPE_TEXT_UNPASSABLE, "YOU CANT PASS ME"
 	},
 };
 

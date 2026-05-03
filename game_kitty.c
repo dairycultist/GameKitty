@@ -89,13 +89,11 @@ static void draw_string(const char *string, int x, int y) {
 	}
 }
 
-static Event *event_queue;
-static unsigned char event_queue_i = 0;
+static Event *curr_event;
 
 static void set_events(Event *events) {
 
-	event_queue   = events;
-	event_queue_i = 0;
+	curr_event = events;
 }
 
 /*
@@ -139,11 +137,13 @@ static void main_loop() {
 	SDL_SetRenderDrawColor(renderer, clear_r, clear_g, clear_b, 255); 	// clear screen_buffer to clear color (default black)
 	SDL_RenderClear(renderer);
 
-	if (mouse_clicked)
-		event_queue_i++;
+	if (mouse_clicked && curr_event->type != TYPE_TEXT_UNPASSABLE) {
+
+		curr_event++;
+	}
 
 	draw_texture(tex_textbox, 0, 256, 0);
-	draw_string(event_queue[event_queue_i].string, 8, 264);
+	draw_string(curr_event->string, 8, 264);
 
 	SDL_SetRenderTarget(renderer, NULL); 								// reset render target back to window
 	SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 			// render screen_buffer
