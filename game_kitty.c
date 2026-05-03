@@ -89,6 +89,15 @@ static void draw_string(const char *string, int x, int y) {
 	}
 }
 
+static Event *event_queue;
+static unsigned char event_queue_i = 0;
+
+static void set_events(Event *events) {
+
+	event_queue   = events;
+	event_queue_i = 0;
+}
+
 /*
  * emscripten main loop
  */
@@ -130,13 +139,11 @@ static void main_loop() {
 	SDL_SetRenderDrawColor(renderer, clear_r, clear_g, clear_b, 255); 	// clear screen_buffer to clear color (default black)
 	SDL_RenderClear(renderer);
 
-	if (mouse_clicked) {
-		draw_string("DOWN\nDOWN", mouse_x, mouse_y);
-	} else {
-		draw_string("UP\nUP", mouse_x, mouse_y);
-	}
+	if (mouse_clicked)
+		event_queue_i++;
 
 	draw_texture(tex_textbox, 0, 256, 0);
+	draw_string(event_queue[event_queue_i].string, 8, 264);
 
 	SDL_SetRenderTarget(renderer, NULL); 								// reset render target back to window
 	SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 			// render screen_buffer
@@ -192,6 +199,7 @@ int main(void) {
 
 	// init
 	set_clear_color(10, 40, 130);
+	set_events(get_start_events());
 
 	// start program
 	emscripten_set_main_loop(main_loop, 0, 1);

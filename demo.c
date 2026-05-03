@@ -2,10 +2,18 @@
 
 #include "GameKitty/game_kitty.h"
 
-static Scene test_scene = {
-
+static Event test_scene[] = {
+	{
+		TYPE_TEXT, "HELLO"
+	},
+	{
+		TYPE_TEXT, "DOES THIS WORK"
+	},
+	{
+		TYPE_TEXT, "I HOPE SO"
+	},
 };
 
-Scene *get_start_scene() {
-	return &test_scene;
+Event *get_start_events() {
+	return test_scene;
 }

@@ -29,17 +29,21 @@
 #define CHAR_W 16
 #define CHAR_H 16
 
-// TODO scene system is a queue; each time a scene is loaded, it pushes all the dialogue, visuals-changes, and finally the dialogue options to the queue
-// and we can use pointers to Scenes for transitions, nice
-
-typedef union {
-
-} SceneEvent;
+#define TYPE_NULL 0x00
+#define TYPE_TEXT 0x01
+#define TYPE_OPTION 0x02
+#define TYPE_VISUAL_ADD 0x03
+#define TYPE_VISUAL_REMOVE 0x04
 
 typedef struct {
 
-} Scene;
+	unsigned char type;
+	char *string;
+	// TODO for TYPE_OPTION, have a pointer to a Scene
+	// TODO for TYPE_OPTION, encode flag stuff
 
-Scene *get_start_scene();
+} Event;
+
+Event *get_start_events();
 
 #endif
