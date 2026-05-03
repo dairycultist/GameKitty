@@ -89,19 +89,13 @@ static void draw_string(const char *string, int x, int y) {
 	}
 }
 
-static Event *curr_event;
-
-static void set_events(Event *events) {
-
-	curr_event = events;
-}
-
 /*
  * emscripten main loop
  */
 static SDL_Event event;
 static SDL_Rect letterbox = { 0, 0, WIDTH * 2, HEIGHT * 2 };
 
+static Event *curr_event;
 static int mouse_x, mouse_y, mouse_clicked;
 
 static void main_loop() {
@@ -199,7 +193,7 @@ int main(void) {
 
 	// init
 	set_clear_color(10, 40, 130);
-	set_events(get_start_events());
+	curr_event = get_start_events();
 
 	// start program
 	emscripten_set_main_loop(main_loop, 0, 1);
