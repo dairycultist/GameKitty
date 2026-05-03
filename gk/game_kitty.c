@@ -84,8 +84,8 @@ static SDL_Event event;
 static SDL_Rect letterbox = { 0, 0, WIDTH * 2, HEIGHT * 2 };
 
 static Event *curr_event;
-// static SDL_Texture *tex_person_left;
-// static SDL_Texture *tex_person_right;
+static SDL_Texture *tex_person_left;
+static SDL_Texture *tex_person_right;
 static SDL_Texture *tex_background;
 
 static int mouse_x, mouse_y, mouse_clicked;
@@ -134,13 +134,37 @@ static void main_loop() {
 
 			switch (curr_event->type) {
 
+				case TYPE_SET_PERSON_LEFT:
+
+					if (tex_person_left)
+						SDL_DestroyTexture(tex_person_left);
+
+					if (curr_event->string)
+						tex_person_left = IMG_LoadTexture(renderer, curr_event->string);
+					else
+						tex_person_left = NULL;
+					break;
+				
+				case TYPE_SET_PERSON_RIGHT:
+
+					if (tex_person_right)
+						SDL_DestroyTexture(tex_person_right);
+
+					if (curr_event->string)
+						tex_person_right = IMG_LoadTexture(renderer, curr_event->string);
+					else
+						tex_person_right = NULL;
+					break;
+
 				case TYPE_SET_BACKGROUND:
-					if (curr_event->string[0] == '\0') {
+
+					if (tex_background)
 						SDL_DestroyTexture(tex_background);
-						tex_background = NULL;
-					} else {
+
+					if (curr_event->string)
 						tex_background = IMG_LoadTexture(renderer, curr_event->string);
-					}
+					else
+						tex_background = NULL;
 					break;
 			}
 
@@ -150,6 +174,22 @@ static void main_loop() {
 	// render
 	if (tex_background)
 		draw_texture(tex_background, 0, 0, 0);
+
+	if (tex_person_left) {
+		
+		int h;
+		SDL_QueryTexture(tex_person_left, NULL, NULL, NULL, &h);
+
+		draw_texture(tex_person_left, 0, HEIGHT - h, 0);
+	}
+
+	if (tex_person_right) {
+		
+		int w, h;
+		SDL_QueryTexture(tex_person_right, NULL, NULL, &w, &h);
+
+		draw_texture(tex_person_right, WIDTH - w, HEIGHT - h, 1);
+	}
 
 	draw_texture(tex_textbox, 0, 256, 0);
 	draw_string(curr_event->string, 8, 264);
