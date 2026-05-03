@@ -4,31 +4,37 @@
 
 static Event test_scene[] = {
 	{
-		TYPE_TEXT, "HELLO"
+		TYPE_TEXT, "HELLO!"
 	},
 	{
 		TYPE_SET_BACKGROUND, "assets/forest.png"
 	},
 	{
-		TYPE_TEXT, "NOW WERE IN A FOREST"
+		TYPE_TEXT, "NOW WE'RE IN A FOREST."
 	},
 	{
 		TYPE_SET_PERSON_LEFT, "assets/person.png"
 	},
 	{
-		TYPE_TEXT, "HERES A GUY"
+		TYPE_TEXT, "HERE'S A GUY."
 	},
 	{
 		TYPE_SET_PERSON_RIGHT, "assets/person_angry.png"
 	},
 	{
-		TYPE_TEXT, "HERES ANOTHER ONE BUT ANGRY"
+		TYPE_TEXT, "HERE'S ANOTHER ONE, BUT ANGRY."
 	},
 	{
 		TYPE_SET_PERSON_LEFT, "assets/person_angry.png"
 	},
 	{
-		TYPE_TEXT, "NOW THEYRE BOTH ANGRY"
+		TYPE_TEXT, "NOW THEY'RE BOTH ANGRY."
+	},
+	{
+		TYPE_TEXT, "LEFT: IM SO ANGRY OMG!!"
+	},
+	{
+		TYPE_TEXT, "RIGHT: SAME LMFAO!! THAT'S SO\nCRAZY??"
 	},
 	{
 		TYPE_SET_BACKGROUND, 0
@@ -40,7 +46,7 @@ static Event test_scene[] = {
 		TYPE_SET_PERSON_RIGHT, 0
 	},
 	{
-		TYPE_TEXT_UNPASSABLE, "THERES NO MORE TEXT"
+		TYPE_TEXT_UNPASSABLE, "THE END...?"
 	}
 };
 

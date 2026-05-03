@@ -63,14 +63,25 @@ static void draw_string(const char *string, int x, int y) {
 
 		if (*string == ' ') {
 			dx++;
+		} else if (*string >= 'A' && *string <= 'Z') {
+			draw_char(*string - 'A', x + CHAR_W * dx++, y + (CHAR_H + 2) * dy);
 		} else if (*string == '\n') {
 			dx = 0;
 			dy++;
-		} else if (*string >= 'A' && *string <= 'Z') {
-			draw_char(*string - 'A', x + CHAR_W * dx, y + (CHAR_H + 2) * dy);
-			dx++;
+		} else if (*string == ':') {
+			draw_char(26, x + CHAR_W * dx++, y + (CHAR_H + 2) * dy);
+		} else if (*string == '!') {
+			draw_char(27, x + CHAR_W * dx++, y + (CHAR_H + 2) * dy);
+		} else if (*string == '.') {
+			draw_char(28, x + CHAR_W * dx++, y + (CHAR_H + 2) * dy);
+		} else if (*string == ',') {
+			draw_char(29, x + CHAR_W * dx++, y + (CHAR_H + 2) * dy);
+		} else if (*string == '\'') {
+			draw_char(30, x + CHAR_W * dx++, y + (CHAR_H + 2) * dy);
+		} else if (*string == '?') {
+			draw_char(31, x + CHAR_W * dx++, y + (CHAR_H + 2) * dy);
 		} else {
-			dx++; // TODO draw square with ? inside
+			draw_char(32, x + CHAR_W * dx++, y + (CHAR_H + 2) * dy);
 		}
 
 		string++;
