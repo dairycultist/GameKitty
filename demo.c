@@ -3,6 +3,7 @@
 #include "gk/game_kitty.h"
 
 static Event test_scene[] = {
+	
 	{ TYPE_TEXT, "Hello!" },
 
 	{ TYPE_SET_BACKGROUND, "assets/forest.png" },

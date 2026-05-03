@@ -23,7 +23,6 @@
 // screen size
 #define WIDTH 512
 #define HEIGHT 384
-#define ASPECT_RATIO (WIDTH / (float) HEIGHT)
 
 // width and height of text characters
 #define CHAR_W 16
@@ -32,7 +31,7 @@
 #define TYPE_NULL 0x00
 #define TYPE_TEXT 0x01
 #define TYPE_TEXT_UNPASSABLE 0x02
-// #define TYPE_OPTION 0x03
+// #define TYPE_CHOICE 0x03
 #define TYPE_SET_PERSON_LEFT 0x04
 #define TYPE_SET_PERSON_RIGHT 0x05
 #define TYPE_SET_BACKGROUND 0x06
@@ -41,9 +40,9 @@ typedef struct {
 
 	unsigned char type;
 	char *string;
-	// TODO for TYPE_OPTION, have a pointer to a Scene
-	// TODO for TYPE_OPTION, encode flag stuff
-	// - the flag (boolean) requirements for it to appear as an option to select at all
+	// TODO for TYPE_CHOICE, have a pointer to a Scene
+	// TODO for TYPE_CHOICE, encode flag stuff
+	// - the flag (boolean) requirements for it to appear as a choice to select at all
 	// - the flags it sets/unsets by using it
 
 } Event;

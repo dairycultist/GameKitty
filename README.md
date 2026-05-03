@@ -2,8 +2,6 @@
 
 Visual novel framework written in C that compiles to WASM for lightweight 2D games.
 
-my own visual novel engine (like twine) that I make so I can avoid using a convenient and efficient UI and use it solely for weightgain romance stories I post on itch.io and it has a retro UI like this ![I stole this](retro.png)
-
 ## Installation
 
 1. GameKitty relies on Emscripten, SDL2, and SDL2 Image. These can be installed __on Mac/Linux__ with the following commands:
