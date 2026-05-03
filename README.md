@@ -12,10 +12,9 @@ brew install sdl2
 brew install sdl2_image
 ```
 
-2. Then, set up the build environment.
+2. Then, clone GameKitty.
 
 ```
-cd <folder you want to be your build environment>
 git clone https://github.com/dairycultist/GameKitty
 cd GameKitty
 ```
