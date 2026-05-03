@@ -65,6 +65,8 @@ static void draw_string(const char *string, int x, int y) {
 			dx++;
 		} else if (*string >= 'A' && *string <= 'Z') {
 			draw_char(*string - 'A', x + CHAR_W * dx++, y + (CHAR_H + 2) * dy);
+		} else if (*string >= 'a' && *string <= 'z') {
+			draw_char(*string - 'a' + 32, x + CHAR_W * dx++, y + (CHAR_H + 2) * dy);
 		} else if (*string == '\n') {
 			dx = 0;
 			dy++;
@@ -81,7 +83,7 @@ static void draw_string(const char *string, int x, int y) {
 		} else if (*string == '?') {
 			draw_char(31, x + CHAR_W * dx++, y + (CHAR_H + 2) * dy);
 		} else {
-			draw_char(32, x + CHAR_W * dx++, y + (CHAR_H + 2) * dy);
+			draw_char(63, x + CHAR_W * dx++, y + (CHAR_H + 2) * dy);
 		}
 
 		string++;
@@ -202,8 +204,8 @@ static void main_loop() {
 		draw_texture(tex_person_right, WIDTH - w, HEIGHT - h, 1);
 	}
 
-	draw_texture(tex_textbox, 0, 256, 0);
-	draw_string(curr_event->string, 8, 264);
+	draw_texture(tex_textbox, 0, 288, 0);
+	draw_string(curr_event->string, 8, 296);
 
 	SDL_SetRenderTarget(renderer, NULL); 						// reset render target back to window
 	SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 	// render screen_buffer
