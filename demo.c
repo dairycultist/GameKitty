@@ -1,6 +1,6 @@
 // This file is intentionally left unlicensed under Apache License, Version 2.0.
 
-#include "GameKitty/game_kitty.h"
+#include "gk/game_kitty.h"
 
 static Event test_scene[] = {
 	{

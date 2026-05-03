@@ -30,11 +30,6 @@ brew install sdl2_image
 cd <folder you want to be your build environment>
 git clone https://github.com/dairycultist/GameKitty
 cd GameKitty
-mv demo.c ../demo.c
-mv spritesheet.png ../spritesheet.png
-mv Makefile ../Makefile
-mv .gitignore ../.gitignore
-cd ..
 ```
 
 3. Finally, build and launch the demo game.
@@ -47,7 +42,7 @@ sudo make run
 
 After building, go into the `build` folder and zip `index.html`, `index.js`, and `index.wasm` together. This zip is what you will upload to Itch.io. Remember to check `This file will be played in the browser` on the uploaded file.
 
-*Optional but recommended:* On the Itch.io edit page, under `Embed options > Viewport dimensions`, set the width/height to 480x320.
+*Optional but recommended:* On the Itch.io edit page, under `Embed options > Viewport dimensions`, set the width/height to 512x384.
 
 ## Copyright
 

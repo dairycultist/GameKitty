@@ -2,13 +2,11 @@
 
 .PHONY: run clean
 
-build/index.html: * GameKitty/*
+build/index.html: *.c gk/game_kitty.c assets/*
 	mkdir -p build
-	emcc *.c GameKitty/game_kitty.c -o build/index.html -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]' \
-	--embed-file GameKitty/font.png \
-	--embed-file GameKitty/textbox.png # --embed-file *.png
+	emcc *.c gk/game_kitty.c -o build/index.html -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]' --embed-file assets/
 	sudo chmod -R 777 build
-	cp GameKitty/index.html build/index.html
+	cp gk/index.html build/index.html
 
 run: build/index.html
 	emrun build/index.html --no_browser

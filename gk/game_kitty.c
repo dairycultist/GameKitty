@@ -175,14 +175,14 @@ int main(void) {
 		return 1;
 	}
 
-	tex_font = IMG_LoadTexture(renderer, "GameKitty/font.png");
+	tex_font = IMG_LoadTexture(renderer, "assets/font.png");
 
 	if (!tex_font) {
 		fprintf(stderr, "\x1b[31m[GameKitty] Could not read font texture\n\x1b[0m");
 		return 1;
 	}
 
-	tex_textbox = IMG_LoadTexture(renderer, "GameKitty/textbox.png");
+	tex_textbox = IMG_LoadTexture(renderer, "assets/textbox.png");
 
 	if (!tex_textbox) {
 		fprintf(stderr, "\x1b[31m[GameKitty] Could not read textbox texture\n\x1b[0m");
