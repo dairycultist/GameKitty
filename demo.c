@@ -7,10 +7,13 @@ static Event test_scene[] = {
 		TYPE_TEXT, "HELLO"
 	},
 	{
-		TYPE_TEXT, "DOES THIS WORK"
+		TYPE_SET_BACKGROUND, "assets/forest.png"
 	},
 	{
-		TYPE_TEXT_UNPASSABLE, "YOU CANT PASS ME"
+		TYPE_TEXT, "NOW WERE IN A FOREST"
+	},
+	{
+		TYPE_TEXT_UNPASSABLE, "THERES NO MORE TEXT"
 	},
 };
 

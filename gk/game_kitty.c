@@ -33,15 +33,6 @@ static SDL_Texture *screen_buffer;
 static SDL_Texture *tex_font;
 static SDL_Texture *tex_textbox;
 
-static unsigned char clear_r = 0, clear_g = 0, clear_b = 0;
-
-static void set_clear_color(unsigned char r, unsigned char g, unsigned char b) {
-
-	clear_r = r;
-	clear_g = g;
-	clear_b = b;
-}
-
 static void draw_texture(SDL_Texture *tex, int x, int y, int flip) {
 
 	int w, h;
@@ -93,6 +84,10 @@ static SDL_Event event;
 static SDL_Rect letterbox = { 0, 0, WIDTH * 2, HEIGHT * 2 };
 
 static Event *curr_event;
+// static SDL_Texture *tex_person_left;
+// static SDL_Texture *tex_person_right;
+static SDL_Texture *tex_background;
+
 static int mouse_x, mouse_y, mouse_clicked;
 
 static void main_loop() {
@@ -124,23 +119,44 @@ static void main_loop() {
 		}
 	}
 
-	SDL_SetRenderDrawColor(renderer, 40, 40, 40, 255); 					// clear window to grey
+	SDL_SetRenderDrawColor(renderer, 40, 40, 40, 255); 			// clear window to grey
 	SDL_RenderClear(renderer);
-	SDL_SetRenderTarget(renderer, screen_buffer); 						// set render target to screen_buffer
-	SDL_SetRenderDrawColor(renderer, clear_r, clear_g, clear_b, 255); 	// clear screen_buffer to clear color (default black)
+	SDL_SetRenderTarget(renderer, screen_buffer); 				// set render target to screen_buffer
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 			// clear screen_buffer to black
 	SDL_RenderClear(renderer);
 
+	// trigger next event with mouse click
 	if (mouse_clicked && curr_event->type != TYPE_TEXT_UNPASSABLE) {
 
-		curr_event++;
+		do {
+
+			curr_event++;
+
+			switch (curr_event->type) {
+
+				case TYPE_SET_BACKGROUND:
+					if (curr_event->string[0] == '\0') {
+						SDL_DestroyTexture(tex_background);
+						tex_background = NULL;
+					} else {
+						tex_background = IMG_LoadTexture(renderer, curr_event->string);
+					}
+					break;
+			}
+
+		} while (curr_event->type != TYPE_NULL && curr_event->type != TYPE_TEXT && curr_event->type != TYPE_TEXT_UNPASSABLE);
 	}
+
+	// render
+	if (tex_background)
+		draw_texture(tex_background, 0, 0, 0);
 
 	draw_texture(tex_textbox, 0, 256, 0);
 	draw_string(curr_event->string, 8, 264);
 
-	SDL_SetRenderTarget(renderer, NULL); 								// reset render target back to window
-	SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 			// render screen_buffer
-	SDL_RenderPresent(renderer); 										// present rendered content to screen
+	SDL_SetRenderTarget(renderer, NULL); 						// reset render target back to window
+	SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 	// render screen_buffer
+	SDL_RenderPresent(renderer); 								// present rendered content to screen
 }
 
 /*
@@ -191,7 +207,6 @@ int main(void) {
 	printf("\n[GameKitty] Good to go!\n\n");
 
 	// init
-	set_clear_color(10, 40, 130);
 	curr_event = get_start_events();
 
 	// start program
