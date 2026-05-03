@@ -1,18 +1,8 @@
 ![GameKitty logo](logo.png)
 
-Game framework in C that compiles to WASM for lightweight 2D games.
+Visual novel framework written in C that compiles to WASM for lightweight 2D games.
 
 my own visual novel engine (like twine) that I make so I can avoid using a convenient and efficient UI and use it solely for weightgain romance stories I post on itch.io and it has a retro UI like this ![I stole this](retro.png)
-
-**Scenes:** all the dialogue and pictures and stuff
-
-**Transitions:** Have these properties...
-- label text when selecting
-- the two scenes they transition from/to
-- the flag (boolean) requirements for it to appear as an option to select at all
-- the flags it sets/unsets by using it
-
-You can create situations where you're only able to reach a scene after completing other scenes first. It's not insanely powerful, but it allows for stories more complex than simple dialogue trees.
 
 ## Installation
 
@@ -38,6 +28,8 @@ cd GameKitty
 sudo make run
 ```
 
+`gk/` contains all the GameKitty source files. `assets/` contains all the images of your game (they MUST be in this folder, unless you choose to modify the Makefile). `demo.c` is a demo game that demonstrates the functionality of GameKitty — a good place to start!
+
 ## Uploading to Itch.io
 
 After building, go into the `build` folder and zip `index.html`, `index.js`, and `index.wasm` together. This zip is what you will upload to Itch.io. Remember to check `This file will be played in the browser` on the uploaded file.
@@ -46,4 +38,4 @@ After building, go into the `build` folder and zip `index.html`, `index.js`, and
 
 ## Copyright
 
-GameKitty is licensed under Apache License, Version 2.0. **The only files that fall under this license are** `game_kitty.c` `game_kitty.h` **and** `logo.png`**.** All other files are CC0.
+GameKitty is licensed under Apache License, Version 2.0. **The only files that fall under this license are** `gk/game_kitty.c` `gk/game_kitty.h` **and** `logo.png`**.** All other files are CC0.

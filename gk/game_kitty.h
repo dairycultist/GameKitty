@@ -45,8 +45,13 @@ typedef struct {
 	char *string;
 	// TODO for TYPE_OPTION, have a pointer to a Scene
 	// TODO for TYPE_OPTION, encode flag stuff
+	// - the flag (boolean) requirements for it to appear as an option to select at all
+	// - the flags it sets/unsets by using it
 
 } Event;
+
+// Flags let you create situations where you're only able to reach a scene after completing other scenes first.
+// It's not insanely powerful, but it allows for stories more complex than simple dialogue trees.
 
 Event *get_start_events();
 

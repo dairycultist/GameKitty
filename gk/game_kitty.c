@@ -23,9 +23,6 @@
 
 #include "game_kitty.h"
 
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
-#define MIN(a, b) ((a) > (b) ? (b) : (a))
-
 /*
  * rendering
  */
@@ -105,6 +102,8 @@ static void main_loop() {
 	while (SDL_PollEvent(&event)) {
 
 		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED) {
+
+			#define MIN(a, b) ((a) > (b) ? (b) : (a))
 
 			// dynamically change letterbox based on screen resize
 			letterbox.w = MIN(event.window.data1, event.window.data2 * ASPECT_RATIO);
